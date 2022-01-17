@@ -13,115 +13,144 @@ import pycountry
 
 
 
-
-#DONT DELETE ANYTHING YET. PLS INFORM ME BEFORE HAND, I HAVENT FINISHED THE FUNCTIONS IM WORKING ON
-
-#PREFIX
+#set up the global prefix for bot commands
 bot = commands.Bot(command_prefix='^', description="description")
 
+
 def weather_api(q):
-      api_key = "11a8994c28e7df09bfbd1124d1554bad"
+    """
+    API function to gather weather information and returns them as tuple.
+    API source: https://openweathermap.org/ 
 
-      url = f"https://api.openweathermap.org/data/2.5/weather?q={q}&appid={api_key}&units=metric"
-    
-      response = requests.get(url)
-      data = response.json()
-      main = data["main"]
-      temperature = main["temp"]
-      temp_fahrenheit = str(round((temperature * 9/5) + 32,1)) + "°F"
-      temp_celsius = str(round(temperature, 1)) + "°C"
-      wind = str(round(data["wind"]["speed"],1)) + "km/h"
-      humidity = str(main["humidity"]) + "%"
+    q: a place (could be a city or a country) of which weather data should be displayed 
+    """
 
-      weather = data["weather"]
-      weather_description = weather[0]["description"]
-      weather_icon = weather[0]["icon"]
-      weather_icon_url = f"http://openweathermap.org/img/wn/{weather_icon}@2x.png"
+    WEATHER_API_KEY = "11a8994c28e7df09bfbd1124d1554bad"
 
-      country = data["sys"]["country"]
-      country_names = pycountry.countries.get(alpha_2=country)
-      country_name = country_names.name
-      country_icon = flag.flag(country)
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={q}&appid={WEATHER_API_KEY}&units=metric"
+    response = requests.get(url)
+    data = response.json()
 
-      return weather_icon_url, country_name, country, country_icon, humidity, wind, temp_celsius, temp_fahrenheit, weather_description
+    #assign the json data to variables
+    main = data["main"]
+    temperature = main["temp"]
+    temp_fahrenheit = str(round((temperature * 9/5) + 32,1)) + "°F"
+    temp_celsius = str(round(temperature, 1)) + "°C"
+    wind = str(round(data["wind"]["speed"],1)) + "km/h"
+    humidity = str(main["humidity"]) + "%"
 
+    weather = data["weather"]
+    weather_description = weather[0]["description"]
+    weather_icon = weather[0]["icon"]
+    weather_icon_url = f"http://openweathermap.org/img/wn/{weather_icon}@2x.png"
 
-#changes big numbers to appropriate units
+    country = data["sys"]["country"]
+    country_names = pycountry.countries.get(alpha_2=country)
+    country_name = country_names.name
+    country_icon = flag.flag(country)
+
+    return weather_icon_url, country_name, country, country_icon, humidity, wind, temp_celsius, temp_fahrenheit, weather_description
+
 def human_format(num):
+    """
+    converts population numbers to readable formats using K, M. and returns them as string.
+
+    num: population number
+
+    code from https://stackoverflow.com/a/45846841
+    """
+
     num = float('{:.3g}'.format(num))
     magnitude = 0
+
     while abs(num) >= 1000:
         magnitude += 1
         num /= 1000.0
     return '{}{}'.format('{:f}'.format(num).rstrip('0').rstrip('.'), ['', ' K', ' M', ' B', ' T'][magnitude])
 
 def country_api(country):
-      url =f"https://restcountries.com/v3.1/name/{country}"
-      data = requests.get(url).json()
+    """
+    API function that gathers information about a country and returns them as tuple.
+    API source: https://restcountries.com/
+    
+    country: any country name
+    """
 
-      region = data[0]["subregion"] #subregion
-      region_s = data[0]["region"] #subregion
-      c_name_l = data[0]["name"]["common"] #long country name
-      flag_icon = data[0]["flag"] #flag as icon
-      c_name_s = data[0]["cca2"] #short country name
-      capital = data[0]["capital"][0] #capital city
+    url =f"https://restcountries.com/v3.1/name/{country}"
+    data = requests.get(url).json()
 
-      currencydata = data[0]["currencies"]
-      currency_short, value = list(currencydata.items())[0]
-      curr_name = value["name"] #name of currency
-      currr_symbol = value["symbol"] #currency symbol
+    region = data[0]["subregion"] #subregion
+    region_s = data[0]["region"] #subregion
+    c_name_l = data[0]["name"]["common"] #long country name
+    flag_icon = data[0]["flag"] #flag as icon
+    c_name_s = data[0]["cca2"] #short country name
+    capital = data[0]["capital"][0] #capital city
 
-      languages = data[0]["languages"]
-      language_list = "" #list of languages
+    currencydata = data[0]["currencies"]
+    currency_short, value = list(currencydata.items())[0]
+    curr_name = value["name"] #name of currency
+    currr_symbol = value["symbol"] #currency symbol
 
-      for slang, language in languages.items():
-            language_list+=language + " "
+    languages = data[0]["languages"]
+    language_list = "" #list of languages
 
-
-      flag_data = data[0]["flags"]["png"] #flag as pic
-      
-      populatation = data[0]["population"]
-      popu_short = human_format(populatation) #population in human readable format
-      area = data[0]["area"]/1000
-      area_short = '{:,}'.format(area).replace(',','.')+" km²" #area human-readable
-
-      return flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag_data, popu_short, area_short, region, region_s
+    for slang, language in languages.items():
+        language_list+=language + " "
 
 
+    flag_data = data[0]["flags"]["png"] #flag as pic
+    
+    populatation = data[0]["population"]
+    popu_short = human_format(populatation) #population in human readable format
+    area = data[0]["area"]/1000
+    area_short = '{:,}'.format(area).replace(',','.')+" km²" #area human-readable
 
-
+    return flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag_data, popu_short, area_short, region, region_s
 
 def tenor(q):
-	tenor_api_key = "LIVDSRZULELA" 
-	lmt = 40
-	random_pic = random.randint(1,25)
+      """
+      API function that finds a random gif that it finds with the search query and returns a gif link.
+      API source: https://tenor.com/gifapi
 
-	r = requests.get(
-	    "https://g.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (q, tenor_api_key, lmt))
+      q: any search query word or phrase
+      """
+      TENOR_API_KEY = "LIVDSRZULELA"
+      lmt = 40
+      random_pic = random.randint(1,25)
 
-	if r.status_code == 200:
-	    # load the GIFs using the urls for the smaller GIF sizes
-	    tenorgifs = json.loads(r.content)
-	    return (tenorgifs["results"][random_pic]["media"][0]["mediumgif"]["url"])
-	else:
-	    return None
+      r = requests.get(
+          "https://g.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (q, TENOR_API_KEY, lmt))
 
+      if r.status_code == 200:
+          # load the GIFs using the urls for the smaller GIF sizes
+          tenorgifs = json.loads(r.content)
+          return (tenorgifs["results"][random_pic]["media"][0]["mediumgif"]["url"])
+      else:
+          return None
+
+#BOT COMMANDS
+#the following bot commands are triggered if message sent by a user has the function name and the set prefix in front of it.
+# For example, to trigger the serverinfo function, it would be   "   ^serverinfo    "
+#some commands can 
 @bot.command()
 async def serverinfo(ctx):
-      guild = ctx.guild
-      embed = discord.Embed(title='B40', description="Community for autistic, depressed people", timestamp=ctx.message.created_at, color=discord.Color.red())
-      embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
-      embed.add_field(name="Owner:", value="blacky#5204")
-      embed.add_field(name="Server ID", value=guild.id)
-      embed.add_field(name="Members:", value=guild.member_count)
-      embed.add_field(name="Channels:", value=len(guild.channels))
-      embed.add_field(name="Roles:", value=len(guild.roles))
-      embed.add_field(name="Booster Staus:", value=guild.premium_subscription_count)
-      
-      embed.add_field(name="Created at:", value=str(guild.created_at)[:16])
-      embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
+    """
+    This command shows an overview of the server and displays information like creation date or member count.
+    """
+    guild = ctx.guild
+    embed = discord.Embed(title='B40', description="Community for autistic, depressed people", timestamp=ctx.message.created_at, color=discord.Color.red())
+    embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
+    embed.add_field(name="Owner:", value="blacky#5204")
+    embed.add_field(name="Server ID", value=guild.id)
+    embed.add_field(name="Members:", value=guild.member_count)
+    embed.add_field(name="Channels:", value=len(guild.channels))
+    embed.add_field(name="Roles:", value=len(guild.roles))
+    embed.add_field(name="Booster Staus:", value=guild.premium_subscription_count)
+    
+    embed.add_field(name="Created at:", value=str(guild.created_at)[:16])
+    embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
-      await ctx.send(embed=embed)
+    await ctx.send(embed=embed)
 
 
 
