@@ -8,6 +8,8 @@ authors = ["Your Name <you@example.com>"]
 python = "^3.8"
 discord = "^1.7.3"
 giphy_client = "^1.0.0"
+Flag = "^0.1.1"
+pycountry = "^22.1.10"
 
 [tool.poetry.dev-dependencies]
 

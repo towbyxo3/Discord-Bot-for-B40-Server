@@ -19,33 +19,31 @@ import pycountry
 #PREFIX
 bot = commands.Bot(command_prefix='^', description="description")
 
-def weather(q):
-	api_key = "11a8994c28e7df09bfbd1124d1554bad"
+def weather_api(q):
+      api_key = "11a8994c28e7df09bfbd1124d1554bad"
 
-	# api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+      url = f"https://api.openweathermap.org/data/2.5/weather?q={q}&appid={api_key}&units=metric"
+    
+      response = requests.get(url)
+      data = response.json()
+      main = data["main"]
+      temperature = main["temp"]
+      temp_fahrenheit = str(round((temperature * 9/5) + 32,1)) + "°F"
+      temp_celsius = str(round(temperature, 1)) + "°C"
+      wind = str(round(data["wind"]["speed"],1)) + "km/h"
+      humidity = str(main["humidity"]) + "%"
 
-	url = f"https://api.openweathermap.org/data/2.5/weather?q={q}&appid={api_key}&units=metric"
-	
-    response = requests.get(url)
-    data = response.json()
-    main = data["main"]
-    temperature = main["temp"]
-    temp_fahrenheit = str(round((temperature * 9/5) + 32,1)) + "°F"
-    temp_celsius = str(round(temperature, 1)) + "°C"
-    wind = str(round(data["wind"]["speed"],1)) + "km/h"
-    humidity = str(main["humidity"]) + "%"
+      weather = data["weather"]
+      weather_description = weather[0]["description"]
+      weather_icon = weather[0]["icon"]
+      weather_icon_url = f"http://openweathermap.org/img/wn/{weather_icon}@2x.png"
 
-    weather = data["weather"]
-    weather_description = weather[0]["description"]
-    weather_icon = weather[0]["icon"]
-    weather_icon_url = f"http://openweathermap.org/img/wn/{weather_icon}@2x.png"
+      country = data["sys"]["country"]
+      country_icon = flag.flag(country)
+      country_names = pycountry.countries.get(alpha_2=country)
+      country_name = country_names.name
 
-    country = data["sys"]["country"]
-    country_icon = flag.flag(country)
-    country_names = pycountry.countries.get(alpha_2=country)
-    country_name = country_names.name
-
-    return weather_icon_url, country_name, country, country_icon, humidity, wind, temp_celsius, temp_fahrenheit, weather_description
+      return weather_icon_url, country_name, country, country_icon, humidity, wind, temp_celsius, temp_fahrenheit, weather_description
 
 
 #changes big numbers to appropriate units
@@ -147,6 +145,25 @@ async def country(ctx, *, args):
 
       await ctx.send(embed=embed)
 
+@bot.command()
+async def weather(ctx, *, args):
+    try:
+        weather_icon_url, country_name, country, country_icon, humidity, wind, temp_celsius, temp_fahrenheit, weather_description= weather_api(args)
+        
+        country_field = country + country_icon
+        embed = discord.Embed(title=args.capitalize(), description=f"A place in {country_name}", timestamp=ctx.message.created_at, color=discord.Color.red())
+        embed.set_thumbnail(url=weather_icon_url)
+        embed.add_field(name="Country:", value=country_field)
+        embed.add_field(name="Humidity:", value=humidity)
+        embed.add_field(name="Wind:", value=wind)
+        embed.add_field(name="Temp.:", value=temp_celsius)
+        embed.add_field(name="Temp.:", value=temp_fahrenheit)
+        embed.add_field(name="Weather:", value=weather_description)
+        embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
+
+        await ctx.send(embed=embed)
+    except:
+        await ctx.send("Place not found")
 
 
 @bot.command()

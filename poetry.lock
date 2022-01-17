@@ -82,6 +82,14 @@ docs = ["sphinx (==3.0.3)", "sphinxcontrib-trio (==1.1.2)", "sphinxcontrib-websu
 voice = ["PyNaCl (>=1.3.0,<1.5)"]
 
 [[package]]
+name = "flag"
+version = "0.1.1"
+description = "Simple flag library for python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "giphy-client"
 version = "1.0.0"
 description = "giphy-api"
@@ -110,6 +118,14 @@ description = "multidict implementation"
 category = "main"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "pycountry"
+version = "22.1.10"
+description = "ISO country, subdivision, language, currency and script definitions and their translations"
+category = "main"
+optional = false
+python-versions = ">=3.5, <4"
 
 [[package]]
 name = "python-dateutil"
@@ -166,7 +182,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8c00b8fa85f5b886ac24b7d920c30231fba4d11147c3d7faba5174651159f616"
+content-hash = "c07e317134aec5abdd3df0f7501a5c49c6cb0990ec56ae3e201b76b2c9e3e59d"
 
 [metadata.files]
 aiohttp = [
@@ -231,6 +247,10 @@ discord = [
 "discord.py" = [
     {file = "discord.py-1.7.3-py3-none-any.whl", hash = "sha256:c6f64db136de0e18e090f6752ea68bdd4ab0a61b82dfe7acecefa22d6477bb0c"},
     {file = "discord.py-1.7.3.tar.gz", hash = "sha256:462cd0fe307aef8b29cbfa8dd613e548ae4b2cb581d46da9ac0d46fb6ea19408"},
+]
+flag = [
+    {file = "Flag-0.1.1-py2.py3-none-any.whl", hash = "sha256:5b229b31943b5699ab65609921d63e9b228ba9e72f307f9510568c78f18b1fed"},
+    {file = "Flag-0.1.1.tar.gz", hash = "sha256:79b83fec0572790e62d574809a3dc10ae9d2464366d3373fa89de73cd8d03694"},
 ]
 giphy-client = [
     {file = "giphy_client-1.0.0.tar.gz", hash = "sha256:80ac8f4dbe64fcc3eeaef695e2c53fb9f76bb09880329c6ead201db8eb80a2e4"},
@@ -312,6 +332,9 @@ multidict = [
     {file = "multidict-5.2.0-cp39-cp39-win32.whl", hash = "sha256:1c7976cd1c157fa7ba5456ae5d31ccdf1479680dc9b8d8aa28afabc370df42b8"},
     {file = "multidict-5.2.0-cp39-cp39-win_amd64.whl", hash = "sha256:c9631c642e08b9fff1c6255487e62971d8b8e821808ddd013d8ac058087591ac"},
     {file = "multidict-5.2.0.tar.gz", hash = "sha256:0dd1c93edb444b33ba2274b66f63def8a327d607c6c790772f448a53b6ea59ce"},
+]
+pycountry = [
+    {file = "pycountry-22.1.10.tar.gz", hash = "sha256:b9a6d9cdbf53f81ccdf73f6f5de01b0d8493cab2213a230af3e34458de85ea32"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
