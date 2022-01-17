@@ -39,9 +39,9 @@ def weather_api(q):
       weather_icon_url = f"http://openweathermap.org/img/wn/{weather_icon}@2x.png"
 
       country = data["sys"]["country"]
-      country_icon = flag.flag(country)
       country_names = pycountry.countries.get(alpha_2=country)
       country_name = country_names.name
+      country_icon = flag.flag(country)
 
       return weather_icon_url, country_name, country, country_icon, humidity, wind, temp_celsius, temp_fahrenheit, weather_description
 
@@ -78,14 +78,14 @@ def country_api(country):
             language_list+=language + " "
 
 
-      flag = data[0]["flags"]["png"] #flag as pic
+      flag_data = data[0]["flags"]["png"] #flag as pic
       
       populatation = data[0]["population"]
       popu_short = human_format(populatation) #population in human readable format
       area = data[0]["area"]/1000
       area_short = '{:,}'.format(area).replace(',','.')+" km²" #area human-readable
 
-      return flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag, popu_short, area_short, region, region_s
+      return flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag_data, popu_short, area_short, region, region_s
 
 
 
@@ -127,10 +127,10 @@ async def serverinfo(ctx):
 
 @bot.command()
 async def country(ctx, *, args):
-      flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag, popu_short, area_short, region, region_s = country_api(args)
+      flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag_data, popu_short, area_short, region, region_s = country_api(args)
       shord_field = c_name_s + " " + flag_icon
       embed = discord.Embed(title=c_name_l, description=f"Country in {region}", timestamp=ctx.message.created_at, color=discord.Color.red())
-      embed.set_thumbnail(url=flag)
+      embed.set_thumbnail(url=flag_data)
       embed.add_field(name="Name:", value=c_name_l)
       embed.add_field(name="Capital:", value=capital)
       embed.add_field(name="Short:", value=shord_field)
@@ -162,8 +162,8 @@ async def weather(ctx, *, args):
         embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
         await ctx.send(embed=embed)
-    except:
-        await ctx.send("Place not found")
+    except Exception as e: 
+        await ctx.send(e)
 
 
 @bot.command()
