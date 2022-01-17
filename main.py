@@ -7,6 +7,10 @@ from urllib import parse, request
 import re
 import requests
 import json
+import flag
+import math
+import pycountry
+
 
 
 
@@ -14,6 +18,34 @@ import json
 
 #PREFIX
 bot = commands.Bot(command_prefix='^', description="description")
+
+def weather(q):
+	api_key = "11a8994c28e7df09bfbd1124d1554bad"
+
+	# api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+
+	url = f"https://api.openweathermap.org/data/2.5/weather?q={q}&appid={api_key}&units=metric"
+	
+    response = requests.get(url)
+    data = response.json()
+    main = data["main"]
+    temperature = main["temp"]
+    temp_fahrenheit = str(round((temperature * 9/5) + 32,1)) + "°F"
+    temp_celsius = str(round(temperature, 1)) + "°C"
+    wind = str(round(data["wind"]["speed"],1)) + "km/h"
+    humidity = str(main["humidity"]) + "%"
+
+    weather = data["weather"]
+    weather_description = weather[0]["description"]
+    weather_icon = weather[0]["icon"]
+    weather_icon_url = f"http://openweathermap.org/img/wn/{weather_icon}@2x.png"
+
+    country = data["sys"]["country"]
+    country_icon = flag.flag(country)
+    country_names = pycountry.countries.get(alpha_2=country)
+    country_name = country_names.name
+
+    return weather_icon_url, country_name, country, country_icon, humidity, wind, temp_celsius, temp_fahrenheit, weather_description
 
 
 #changes big numbers to appropriate units
