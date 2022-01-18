@@ -94,9 +94,9 @@ def country_api(country):
     languages = data[0]["languages"]
     language_list = "" #list of languages
 
+		#covert tuple to a readable string
     for slang, language in languages.items():
         language_list+=language + " "
-
 
     flag_data = data[0]["flags"]["png"] #flag as pic
     
@@ -130,7 +130,7 @@ def tenor(q):
         return None
 
 #BOT COMMANDS
-#the following bot commands are triggered if message sent by a user has the function name and the set prefix in front of it.
+#the following bot commands are triggered if message sent by a user consists of the prefix followed by the command function name.
 # For example, to trigger the serverinfo function, it would be   "   ^serverinfo    "
 #some commands can 
 @bot.command()
@@ -201,26 +201,18 @@ async def weather(ctx, *, args):
         embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
         await ctx.send(embed=embed)
-    except Exception as e: 
-        await ctx.send(e)
+    except:
+				await ctx.send("Place not found")
 
-
+from datalists import tj_dog_pictures
 @bot.command()
 async def tj(ctx):
-    dog_pics = ["https://cdn.discordapp.com/attachments/930547006521364500/932343519576727653/224B8621-A849-4509-854D-32717BED961A.jpg",
-    "https://cdn.discordapp.com/attachments/930547006521364500/931273190481723522/551A6C05-7F32-4789-92D6-B431D882D0BD.jpg",
-    "https://cdn.discordapp.com/attachments/930547006521364500/930547380116389988/691FA563-229A-4300-916D-902E4E107FD0.jpg",
-    "https://cdn.discordapp.com/attachments/739175633673781262/930462292594786334/6599EB5E-CEEC-4A88-BBD5-2456C201453F.jpg",
-    "https://cdn.discordapp.com/attachments/739175633673781262/929373440765485066/IMG_4681.jpg",
-    "https://cdn.discordapp.com/attachments/739175633673781262/924434608639049728/IMG_4405.jpg",
-    "https://cdn.discordapp.com/attachments/739175633673781262/920632198212763648/A01BD834-C37C-4A4B-8F79-361EFCA15B22.jpg",
-    "https://cdn.discordapp.com/attachments/739175633673781262/920633169332547584/IMG_3828.JPG",
-    "https://cdn.discordapp.com/attachments/739175633673781262/920631410862207006/7D5EE211-6E60-4EB6-AFB6-0EF7CAD780E1.jpg",
-    "https://cdn.discordapp.com/attachments/739175633673781262/932425725347250186/C4C92C61-18C8-44EE-9D00-B813C2AC91F3.jpg"
-    ]
-    pic = dog_pics[random.randint(0,len(dog_pics)-1)]
-    await ctx.send(pic)
+		"""
+		Returns a random picture of TJs dogs.
+		"""
 
+		pic = tj_dog_pictures[random.randint(0,len(tj_dog_pictures)-1)]
+		await ctx.send(pic)
 
 @bot.command()
 async def omri(ctx):
@@ -228,63 +220,73 @@ async def omri(ctx):
 
 @bot.command()
 async def hug(ctx, *, user : discord.Member=None):
-      embed = discord.Embed(title=f"{ctx.author.name} sends hugs to {user.name}")
-      embed.set_image(url=tenor("anime-hugs"))
-      await ctx.send(embed=embed)
+		"""
+		sends an embed Discord message including who wants to hug who. A random hug-related gif will be attached.
+		"""
+
+		embed = discord.Embed(title=f"{ctx.author.name} sends hugs to {user.name}")
+		embed.set_image(url=tenor("anime-hugs"))
+		await ctx.send(embed=embed)
 
 @bot.command()
 async def kiss(ctx, *, user : discord.Member=None):
-      embed = discord.Embed(title=f"{ctx.author.name} sends kisses to {user.name}")
-      embed.set_image(url=tenor("anime-kiss"))
-      await ctx.send(embed=embed)
+		"""
+		sends an embed Discord message including who wants to kiss who. A random kiss related gif will be attached.
+		"""
+
+		embed = discord.Embed(title=f"{ctx.author.name} sends kisses to {user.name}")
+		embed.set_image(url=tenor("anime-kiss"))
+		await ctx.send(embed=embed)
 
 @bot.command()
 async def slap(ctx, *, user : discord.Member=None):
-      embed = discord.Embed(title=f"{ctx.author.name} slaps {user.name}")
-      embed.set_image(url=tenor("anime-slap"))
-      await ctx.send(embed=embed)
+		embed = discord.Embed(title=f"{ctx.author.name} slaps {user.name}")
+		embed.set_image(url=tenor("anime-slap"))
+		await ctx.send(embed=embed)
 
 @bot.command()
 async def cringe(ctx, *, user : discord.Member=None):
-      embed = discord.Embed(title=f"{ctx.author.name} cringes at {user.name}")
-      embed.set_image(url=tenor("cringe"))
-      await ctx.send(embed=embed)
+		embed = discord.Embed(title=f"{ctx.author.name} cringes at {user.name}")
+		embed.set_image(url=tenor("cringe"))
+		await ctx.send(embed=embed)
 
 @bot.command()
 async def meme(ctx, *, user : discord.Member=None):
-      embed = discord.Embed(title=f"{ctx.author.name} requested a meme")
-      embed.set_image(url=tenor("meme"))
-      await ctx.send(embed=embed)
+		embed = discord.Embed(title=f"{ctx.author.name} requested a meme")
+		embed.set_image(url=tenor("meme"))
+		await ctx.send(embed=embed)
 
 
 
 @bot.command()
-async def pp(ctx, *, user : discord.Member=None):
-      penis = "8" + "="*random.randint(0, 18) + "D"
-      
-      pptell = ""
+async def penis(ctx, *, user : discord.Member=None):
+		"""
+		Shows stats about the requested persons penis.
+		"""
 
-      if len(penis)>15:
-        pptell = "DAMN UR PACKING"
+		penis = "8" + "="*random.randint(0, 18) + "D"
 
-      elif len(penis)>9:
-        pptell = "average boi"
+		if len(penis)>15:
+			penis_info = "DAMN UR PACKING"
 
-      elif len(penis)>2:
-        pptell = "lol bozo + ratio + small pp"
+		elif len(penis)>9:
+			penis_info = "average boi"
 
-      else:
-        pptell = "LOL U ONLY HAVE BALLS AND A TIP"
+		elif len(penis)>2:
+			penis_info = "lol bozo + ratio + small pp"
+
+		else:
+			penis_info = "LOL U ONLY HAVE BALLS AND A TIP"
 
 
-      embed = discord.Embed(title='B40 PENIS MEASUREMENT', description=pptell, timestamp=ctx.message.created_at, color=discord.Color.red())
-      embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
-      embed.add_field(name="DICK OF:", value=user.mention)
-      embed.add_field(name="LENGTH:", value=len(penis))
-      embed.add_field(name="UNIT:", value="cm")
-      embed.add_field(name="PENIS DISPLAY:", value= penis)
-      embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
-      await ctx.send(embed=embed)
+		embed = discord.Embed(title='B40 PENIS MEASUREMENT', description=penis_info, timestamp=ctx.message.created_at, color=discord.Color.red())
+		embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
+		embed.add_field(name="DICK OF:", value=user.mention)
+		embed.add_field(name="LENGTH:", value=len(penis))
+		embed.add_field(name="UNIT:", value="cm")
+		embed.add_field(name="PENIS DISPLAY:", value= penis)
+		embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
+		await ctx.send(embed=embed)
 
 
 # dont delete this, need this for future reference
