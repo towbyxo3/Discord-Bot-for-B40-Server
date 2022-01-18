@@ -108,25 +108,26 @@ def country_api(country):
     return flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag_data, popu_short, area_short, region, region_s
 
 def tenor(q):
-      """
-      API function that finds a random gif that it finds with the search query and returns a gif link.
-      API source: https://tenor.com/gifapi
+    """
+    API function that finds a random gif that it finds with the search query and returns a gif link.
+    API source: https://tenor.com/gifapi
 
-      q: any search query word or phrase
-      """
-      TENOR_API_KEY = "LIVDSRZULELA"
-      lmt = 40
-      random_pic = random.randint(1,25)
+    q: any search query word or phrase
+    """
 
-      r = requests.get(
-          "https://g.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (q, TENOR_API_KEY, lmt))
+    TENOR_API_KEY = "LIVDSRZULELA"
+    lmt = 40
+    random_pic = random.randint(1,25)
 
-      if r.status_code == 200:
-          # load the GIFs using the urls for the smaller GIF sizes
-          tenorgifs = json.loads(r.content)
-          return (tenorgifs["results"][random_pic]["media"][0]["mediumgif"]["url"])
-      else:
-          return None
+    r = requests.get(
+        "https://g.tenor.com/v1/search?q=%s&key=%s&limit=%s" % (q, TENOR_API_KEY, lmt))
+
+    if r.status_code == 200:
+        # load the GIFs using the urls for the smaller GIF sizes
+        tenorgifs = json.loads(r.content)
+        return (tenorgifs["results"][random_pic]["media"][0]["mediumgif"]["url"])
+    else:
+        return None
 
 #BOT COMMANDS
 #the following bot commands are triggered if message sent by a user has the function name and the set prefix in front of it.
@@ -137,6 +138,7 @@ async def serverinfo(ctx):
     """
     This command shows an overview of the server and displays information like creation date or member count.
     """
+
     guild = ctx.guild
     embed = discord.Embed(title='B40', description="Community for autistic, depressed people", timestamp=ctx.message.created_at, color=discord.Color.red())
     embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
@@ -156,30 +158,38 @@ async def serverinfo(ctx):
 
 @bot.command()
 async def country(ctx, *, args):
-      flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag_data, popu_short, area_short, region, region_s = country_api(args)
-      shord_field = c_name_s + " " + flag_icon
-      embed = discord.Embed(title=c_name_l, description=f"Country in {region}", timestamp=ctx.message.created_at, color=discord.Color.red())
-      embed.set_thumbnail(url=flag_data)
-      embed.add_field(name="Name:", value=c_name_l)
-      embed.add_field(name="Capital:", value=capital)
-      embed.add_field(name="Short:", value=shord_field)
-      embed.add_field(name="Area:", value=area_short)
-      embed.add_field(name="Continent:", value=region_s)
-      embed.add_field(name="Population:", value=popu_short)
-      embed.add_field(name="Currency:", value=curr_name)
-      embed.add_field(name="Symbol:", value=currr_symbol)
-      embed.add_field(name="Language(s):", value=language_list)
+    """
+    Shows extensive stats about a country requested by the user.
+    """
 
-      embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
+    flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag_data, popu_short, area_short, region, region_s = country_api(args)
+    shord_field = c_name_s + " " + flag_icon
+    embed = discord.Embed(title=c_name_l, description=f"Country in {region}", timestamp=ctx.message.created_at, color=discord.Color.red())
+    embed.set_thumbnail(url=flag_data)
+    embed.add_field(name="Name:", value=c_name_l)
+    embed.add_field(name="Capital:", value=capital)
+    embed.add_field(name="Short:", value=shord_field)
+    embed.add_field(name="Area:", value=area_short)
+    embed.add_field(name="Continent:", value=region_s)
+    embed.add_field(name="Population:", value=popu_short)
+    embed.add_field(name="Currency:", value=curr_name)
+    embed.add_field(name="Symbol:", value=currr_symbol)
+    embed.add_field(name="Language(s):", value=language_list)
 
-      await ctx.send(embed=embed)
+    embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
+
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def weather(ctx, *, args):
+    """
+    Shows extensive weather stats about a place requested by the user.
+    """
+    
     try:
         weather_icon_url, country_name, country, country_icon, humidity, wind, temp_celsius, temp_fahrenheit, weather_description= weather_api(args)
         
-        country_field = country + country_icon
+        country_field = country + " " + country_icon
         embed = discord.Embed(title=args.capitalize(), description=f"A place in {country_name}", timestamp=ctx.message.created_at, color=discord.Color.red())
         embed.set_thumbnail(url=weather_icon_url)
         embed.add_field(name="Country:", value=country_field)
