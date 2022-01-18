@@ -17,6 +17,35 @@ import pycountry
 bot = commands.Bot(command_prefix='^', description="description")
 
 
+
+def dictionary(q):
+		url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{q}"
+		data = requests.get(url).json()
+
+		main = data[0]
+
+		word = main["word"]
+		phonetic = main["phonetic"]
+
+		word_type = main["meanings"][0]["partOfSpeech"]
+		definition = main["meanings"][0]["definitions"][0]["definition"]
+		try:
+			example = main["meanings"][0]["definitions"][0]["example"]
+		except:
+			example = "None given"
+		synonyms = main["meanings"][0]["definitions"][0]["synonyms"]
+		list_of_synonyms = ""
+
+		for synonym in synonyms:
+			if len(list_of_synonyms)<35:
+				list_of_synonyms+=synonym + ", "
+			else:
+				break
+		if len(list_of_synonyms)==0:
+			list_of_synonyms = "None given"
+		return word, phonetic, word_type, definition, example, list_of_synonyms
+
+
 def weather_api(q):
     """
     API function to gather weather information and returns them as tuple.
@@ -201,8 +230,25 @@ async def weather(ctx, *, args):
         embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
         await ctx.send(embed=embed)
-    except:
-				await ctx.send("Place not found")
+    except:pass
+
+@bot.command()
+async def word(ctx, *, args):
+    """
+    dictionary ish display of a word.
+    """
+
+    word, phonetic, word_type, definition, example, list_of_synonyms = dictionary(args)
+    embed = discord.Embed(title=word, description=definition, timestamp=ctx.message.created_at, color=discord.Color.red())
+    embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Flag_of_the_United_Kingdom.svg/640px-Flag_of_the_United_Kingdom.svg.png")
+    embed.add_field(name="Type:", value=word_type)
+    embed.add_field(name="Phonetic:", value=phonetic)
+    embed.add_field(name="Synonyms:", value=list_of_synonyms)
+    embed.add_field(name="Example:", value=example)
+
+    embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
+
+    await ctx.send(embed=embed)
 
 from datalists import tj_dog_pictures
 @bot.command()
@@ -336,7 +382,7 @@ async def on_message(message):
 @bot.listen()
 async def on_message(message):
     if "nigga" in message.content.lower():
-        with open('penis.png','rb') as f:
+        with open('nword.png','rb') as f:
           picture = discord.File(f)
           await message.channel.send(file=picture)
 
@@ -356,7 +402,6 @@ async def on_message(message):
     if "3bood?" in message.content.lower():
         await message.channel.send('glory hole beta tester')
 
-        
 my_secret = os.environ['TOKEN']
 bot.run(my_secret)
 
