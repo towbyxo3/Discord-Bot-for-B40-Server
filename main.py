@@ -16,46 +16,56 @@ import pycountry
 #set up the global prefix for bot commands
 bot = commands.Bot(command_prefix='^', description="description")
 
-key = "&key=" + "AIzaSyDnmmANZ2R50QtRlioo2HzB8AabSVhjKzM" #you need an actual key now!!
+
+
+
+def get_quote():
+	response = requests.get("https://zenquotes.io/api/random")
+	json_data = json.loads(response.text)
+	quote = json_data[0]['q'] + " -" + json_data[0]['a']
+	return (quote)
+
+
 
 def GetStreet(Add):
-		"""
-		Base on the location given, it returns a pic of the location.
-		"""
-		base = "https://maps.googleapis.com/maps/api/streetview?size=1200x800&location="
-		MyUrl = base + parse.quote_plus(Add) + key #added url encoding
-		fi = "test" + ".jpg"
-	
-		return MyUrl
+	"""
+	Base on the location given, it returns a pic of the location.
+	"""
+	key = "&key=" + "AIzaSyDnmmANZ2R50QtRlioo2HzB8AabSVhjKzM" 
+	base = "https://maps.googleapis.com/maps/api/streetview?size=1200x800&location="
+	MyUrl = base + parse.quote_plus(Add) + key #added url encoding
+	fi = "test" + ".jpg"
+
+	return MyUrl
 
 
 
 def dictionary(q):
-		url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{q}"
-		data = requests.get(url).json()
+	url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{q}"
+	data = requests.get(url).json()
 
-		main = data[0]
+	main = data[0]
 
-		word = main["word"]
-		phonetic = main["phonetic"]
+	word = main["word"]
+	phonetic = main["phonetic"]
 
-		word_type = main["meanings"][0]["partOfSpeech"]
-		definition = main["meanings"][0]["definitions"][0]["definition"]
-		try:
-			example = main["meanings"][0]["definitions"][0]["example"]
-		except:
-			example = "None given"
-		synonyms = main["meanings"][0]["definitions"][0]["synonyms"]
-		list_of_synonyms = ""
+	word_type = main["meanings"][0]["partOfSpeech"]
+	definition = main["meanings"][0]["definitions"][0]["definition"]
+	try:
+		example = main["meanings"][0]["definitions"][0]["example"]
+	except:
+		example = "None given"
+	synonyms = main["meanings"][0]["definitions"][0]["synonyms"]
+	list_of_synonyms = ""
 
-		for synonym in synonyms:
-			if len(list_of_synonyms)<35:
-				list_of_synonyms+=synonym + ", "
-			else:
-				break
-		if len(list_of_synonyms)==0:
-			list_of_synonyms = "None given"
-		return word, phonetic, word_type, definition, example, list_of_synonyms
+	for synonym in synonyms:
+		if len(list_of_synonyms)<35:
+			list_of_synonyms+=synonym + ", "
+		else:
+			break
+	if len(list_of_synonyms)==0:
+		list_of_synonyms = "None given"
+	return word, phonetic, word_type, definition, example, list_of_synonyms
 
 
 def weather_api(q):
@@ -188,7 +198,7 @@ async def serverinfo(ctx):
     embed.add_field(name="Members:", value=guild.member_count)
     embed.add_field(name="Channels:", value=len(guild.channels))
     embed.add_field(name="Roles:", value=len(guild.roles))
-    embed.add_field(name="Booster Staus:", value=guild.premium_subscription_count)
+    embed.add_field(name="Booster Status:", value=guild.premium_subscription_count)
     
     embed.add_field(name="Created at:", value=str(guild.created_at)[:16])
     embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
@@ -197,12 +207,19 @@ async def serverinfo(ctx):
 
 @bot.command()
 async def map(ctx, *, args):
-		picture = GetStreet(args)
-		embed = discord.Embed(title=args)
-		embed.set_image(url=picture)
-		await ctx.send(embed=embed)
+	picture = GetStreet(args)
+	embed = discord.Embed(title=args)
+	embed.set_image(url=picture)
+	await ctx.send(embed=embed)
 	
-
+@bot.command()
+async def quote(ctx):
+	"""
+	sends a random quote
+	"""
+	
+	r_quote = get_quote()
+	await ctx.send(r_quote)
 
 @bot.command()
 async def country(ctx, *, args):
@@ -272,12 +289,12 @@ async def word(ctx, *, args):
 from datalists import tj_dog_pictures
 @bot.command()
 async def tj(ctx):
-		"""
-		Returns a random picture of TJs dogs.
-		"""
+	"""
+	Returns a random picture of TJs dogs.
+	"""
 
-		pic = tj_dog_pictures[random.randint(0,len(tj_dog_pictures)-1)]
-		await ctx.send(pic)
+	pic = tj_dog_pictures[random.randint(0,len(tj_dog_pictures)-1)]
+	await ctx.send(pic)
 
 
 
@@ -288,73 +305,71 @@ async def omri(ctx):
 
 @bot.command()
 async def hug(ctx, *, user : discord.Member=None):
-		"""
-		sends an embed Discord message including who wants to hug who. A random hug-related gif will be attached.
-		"""
+	"""
+	sends an embed Discord message including who wants to hug who. A random hug-related gif will be attached.
+	"""
 
-		embed = discord.Embed(title=f"{ctx.author.name} sends hugs to {user.name}")
-		embed.set_image(url=tenor("anime-hugs"))
-		await ctx.send(embed=embed)
+	embed = discord.Embed(title=f"{ctx.author.name} sends hugs to {user.name}")
+	embed.set_image(url=tenor("anime-hugs"))
+	await ctx.send(embed=embed)
 
 @bot.command()
 async def kiss(ctx, *, user : discord.Member=None):
-		"""
-		sends an embed Discord message including who wants to kiss who. A random kiss related gif will be attached.
-		"""
+	"""
+	sends an embed Discord message including who wants to kiss who. A random kiss related gif will be attached.
+	"""
 
-		embed = discord.Embed(title=f"{ctx.author.name} sends kisses to {user.name}")
-		embed.set_image(url=tenor("anime-kiss"))
-		await ctx.send(embed=embed)
+	embed = discord.Embed(title=f"{ctx.author.name} sends kisses to {user.name}")
+	embed.set_image(url=tenor("anime-kiss"))
+	await ctx.send(embed=embed)
 
 @bot.command()
 async def slap(ctx, *, user : discord.Member=None):
-		embed = discord.Embed(title=f"{ctx.author.name} slaps {user.name}")
-		embed.set_image(url=tenor("anime-slap"))
-		await ctx.send(embed=embed)
+	embed = discord.Embed(title=f"{ctx.author.name} slaps {user.name}")
+	embed.set_image(url=tenor("anime-slap"))
+	await ctx.send(embed=embed)
 
 @bot.command()
 async def cringe(ctx, *, user : discord.Member=None):
-		embed = discord.Embed(title=f"{ctx.author.name} cringes at {user.name}")
-		embed.set_image(url=tenor("cringe"))
-		await ctx.send(embed=embed)
+	embed = discord.Embed(title=f"{ctx.author.name} cringes at {user.name}")
+	embed.set_image(url=tenor("cringe"))
+	await ctx.send(embed=embed)
 
 @bot.command()
 async def meme(ctx, *, user : discord.Member=None):
-		embed = discord.Embed(title=f"{ctx.author.name} requested a meme")
-		embed.set_image(url=tenor("meme"))
-		await ctx.send(embed=embed)
-
-
+	embed = discord.Embed(title=f"{ctx.author.name} requested a meme")
+	embed.set_image(url=tenor("meme"))
+	await ctx.send(embed=embed)
 
 @bot.command()
 async def penis(ctx, *, user : discord.Member=None):
-		"""
-		Shows stats about the requested persons penis.
-		"""
+	"""
+	Shows stats about the requested persons penis.
+	"""
 
-		penis = "8" + "="*random.randint(0, 18) + "D"
+	penis = "8" + "="*random.randint(0, 18) + "D"
 
-		if len(penis)>15:
-			penis_info = "DAMN UR PACKING"
+	if len(penis)>15:
+		penis_info = "DAMN UR PACKING"
 
-		elif len(penis)>9:
-			penis_info = "average boi"
+	elif len(penis)>9:
+		penis_info = "average boi"
 
-		elif len(penis)>2:
-			penis_info = "lol bozo + ratio + small pp"
+	elif len(penis)>2:
+		penis_info = "lol bozo + ratio + small pp"
 
-		else:
-			penis_info = "LOL U ONLY HAVE BALLS AND A TIP"
+	else:
+		penis_info = "LOL U ONLY HAVE BALLS AND A TIP"
 
+	embed = discord.Embed(title='B40 PENIS MEASUREMENT', description=penis_info, timestamp=ctx.message.created_at, color=discord.Color.red())
+	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
+	embed.add_field(name="DICK OF:", value=user.mention)
+	embed.add_field(name="LENGTH:", value=len(penis))
+	embed.add_field(name="UNIT:", value="cm")
+	embed.add_field(name="PENIS DISPLAY:", value= penis)
+	embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
-		embed = discord.Embed(title='B40 PENIS MEASUREMENT', description=penis_info, timestamp=ctx.message.created_at, color=discord.Color.red())
-		embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
-		embed.add_field(name="DICK OF:", value=user.mention)
-		embed.add_field(name="LENGTH:", value=len(penis))
-		embed.add_field(name="UNIT:", value="cm")
-		embed.add_field(name="PENIS DISPLAY:", value= penis)
-		embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
-		await ctx.send(embed=embed)
+	await ctx.send(embed=embed)
 
 
 # dont delete this, need this for future reference
@@ -372,14 +387,14 @@ async def test2(ctx, *,  user : discord.Member=None):
 
 @bot.command()
 async def avatar(ctx, *, user : discord.Member=None):
-      try:
-        embed = discord.Embed(title=f"{user.name}")
-        embed.set_image(url=user.avatar_url)
-        await ctx.send(embed=embed)
-      except:        
-        embed = discord.Embed(title=f"{ctx.author.name}")
-        embed.set_image(url=ctx.message.author.avatar_url)
-        await ctx.send(embed=embed)
+	try:
+		embed = discord.Embed(title=f"{user.name}")
+		embed.set_image(url=user.avatar_url)
+		await ctx.send(embed=embed)
+	except:        
+		embed = discord.Embed(title=f"{ctx.author.name}")
+		embed.set_image(url=ctx.message.author.avatar_url)
+		await ctx.send(embed=embed)
 
 
 # Events
