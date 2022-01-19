@@ -10,7 +10,7 @@ import json
 import flag
 import math
 import pycountry
-
+from keep_alive import keep_alive 
 
 
 #set up the global prefix for bot commands
@@ -143,11 +143,13 @@ def country_api(country):
     currr_symbol = value["symbol"] #currency symbol
 
     languages = data[0]["languages"]
-    language_list = "" #list of languages
+    language_list = []
 
 		#covert tuple to a readable string
     for slang, language in languages.items():
-        language_list+=language + " "
+        language_list.append(language)
+
+    language_list = ', '.join(language_list)
 
     flag_data = data[0]["flags"]["png"] #flag as pic
     
@@ -184,6 +186,63 @@ def tenor(q):
 #the following bot commands are triggered if message sent by a user consists of the prefix followed by the command function name.
 # For example, to trigger the serverinfo function, it would be   "   ^serverinfo    "
 #some commands can 
+
+@bot.command()
+async def userinfo(ctx,member:discord.Member=None):
+
+	if member==None:
+		member=ctx.author
+
+	rlist = []
+	for role in member.roles:
+		if role.name != "@everyone":
+			rlist.append(role.mention)
+
+	b = ", ".join(rlist)
+
+
+	embed = discord.Embed(colour=member.color,timestamp=ctx.message.created_at)
+
+	embed.set_author(name=f"{member}   •   {member.id}"),
+	embed.set_thumbnail(url=member.avatar_url),
+
+
+	embed.add_field(name='Name:',value=member.mention,inline=True)
+	embed.add_field(name='Booster', value=f'{("Yes" if member.premium_since else "No")}',inline=True)
+
+
+
+	
+
+	embed.add_field(name=f'Roles:({len(rlist)})',value=''.join([b]),inline=False)
+	embed.add_field(name='Top Role:',value=member.top_role.mention,inline=False)
+
+	embed.add_field(name='Joined ', value=f'```{str(member.joined_at)[:16]}```', inline=True)
+	embed.add_field(name='Registered', value=f'```{str(member.created_at)[:16]}```', inline=True)
+		
+	embed.set_footer(text=f'Requested by - {ctx.author}',
+	icon_url=ctx.author.avatar_url)
+
+
+	await ctx.send(embed=embed)
+
+
+
+
+
+	"""	embed.add_field(name='Name', value=f'```{member.name}#{member.discriminator}```', inline=True)
+	embed.add_field(name='Roles', value=f'```{b}```', inline=True)
+	embed.add_field(name='Nickname', value=f'```{(member.nick if member.nick else "Not set")}```', inline=True)
+	embed.add_field(name='Joined Server', value=f'```{str(member.joined_at)[:16]}```', inline=True)
+	embed.add_field(name='Joined Discord', value=f'```{str(member.created_at)[:16]}```', inline=True)
+	embed.add_field(name='Roles', value=f'```{len(member.roles)-1}```', inline=True)
+	embed.add_field(name='Highest Role', value=f'```{member.top_role.name}```', inline=True)
+	embed.add_field(name='Color', value=f'```{member.color}```', inline=True)
+	embed.add_field(name='Booster', value=f'```{("Yes" if member.premium_since else "No")}```', inline=True)
+	embed.set_thumbnail(url=member.avatar_url)
+	embed.set_footer(text=f'Used by {ctx.author.name} • {ctx.author.id}', icon_url=ctx.author.avatar_url)
+	await ctx.send(embed=embed)"""
+
 @bot.command()
 async def serverinfo(ctx):
     """
@@ -440,5 +499,6 @@ async def on_message(message):
         await message.channel.send('glory hole beta tester')
 
 my_secret = os.environ['TOKEN']
+keep_alive()
 bot.run(my_secret)
 
