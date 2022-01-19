@@ -19,11 +19,14 @@ bot = commands.Bot(command_prefix='^', description="description")
 key = "&key=" + "AIzaSyDnmmANZ2R50QtRlioo2HzB8AabSVhjKzM" #you need an actual key now!!
 
 def GetStreet(Add):
-  base = "https://maps.googleapis.com/maps/api/streetview?size=1200x800&location="
-  MyUrl = base + parse.quote_plus(Add) + key #added url encoding
-  fi = "test" + ".jpg"
- 
-  return MyUrl
+		"""
+		Base on the location given, it returns a pic of the location.
+		"""
+		base = "https://maps.googleapis.com/maps/api/streetview?size=1200x800&location="
+		MyUrl = base + parse.quote_plus(Add) + key #added url encoding
+		fi = "test" + ".jpg"
+	
+		return MyUrl
 
 
 
@@ -387,21 +390,21 @@ async def on_ready():
 @bot.listen()
 async def on_message(message):
   if "who asked?" in message.content.lower():
-      with open('SOVAWHOASKED.png', 'rb') as f:
+      with open('pictures/SOVAWHOASKED.png', 'rb') as f:
         picture = discord.File(f)
         await message.channel.send(file=picture)
 
 @bot.listen()
 async def on_message(message):
     if "blacky?" in message.content.lower():
-        with open('blacky.png','rb') as f:
+        with open('pictures/blacky.png','rb') as f:
           picture = discord.File(f)
           await message.channel.send('The Prince of Dubai',file=picture)
 
 @bot.listen()
 async def on_message(message):
     if "nigga" in message.content.lower():
-        with open('nword.png','rb') as f:
+        with open('pictures/nword.png','rb') as f:
           picture = discord.File(f)
           await message.channel.send(file=picture)
 
