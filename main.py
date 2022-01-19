@@ -16,6 +16,15 @@ import pycountry
 #set up the global prefix for bot commands
 bot = commands.Bot(command_prefix='^', description="description")
 
+key = "&key=" + "AIzaSyDnmmANZ2R50QtRlioo2HzB8AabSVhjKzM" #you need an actual key now!!
+
+def GetStreet(Add):
+  base = "https://maps.googleapis.com/maps/api/streetview?size=1200x800&location="
+  MyUrl = base + parse.quote_plus(Add) + key #added url encoding
+  fi = "test" + ".jpg"
+ 
+  return MyUrl
+
 
 
 def dictionary(q):
@@ -183,6 +192,13 @@ async def serverinfo(ctx):
 
     await ctx.send(embed=embed)
 
+@bot.command()
+async def map(ctx, *, args):
+		picture = GetStreet(args)
+		embed = discord.Embed(title=args)
+		embed.set_image(url=picture)
+		await ctx.send(embed=embed)
+	
 
 
 @bot.command()
@@ -259,6 +275,9 @@ async def tj(ctx):
 
 		pic = tj_dog_pictures[random.randint(0,len(tj_dog_pictures)-1)]
 		await ctx.send(pic)
+
+
+
 
 @bot.command()
 async def omri(ctx):
