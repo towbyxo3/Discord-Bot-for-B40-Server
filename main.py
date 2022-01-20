@@ -26,7 +26,6 @@ def get_level(user):
 		    discriminator = item['discriminator']
 		    level = item['level']
 		    msg_count = item['message_count']
-		    xp = item['xp']
 		    if name == user:
 		    	rank = count+1
 		    	return level, rank, xp, msg_count
@@ -211,6 +210,37 @@ def tenor(q):
 # For example, to trigger the serverinfo function, it would be   "   ^serverinfo    "
 #some commands can 
 
+
+
+@bot.command()
+async def lb(ctx):
+		URL = 'https://mee6.xyz/api/plugins/levels/leaderboard/739175633673781259'
+
+		res = requests.get(URL)
+		for count, item in enumerate(res.json()['players']):
+			name = item['username']
+			id_user = item['id']
+			discriminator = item['discriminator']
+			level = item['level']
+			msg_count = item['message_count']
+			xp = item['xp']
+
+
+
+		embed = discord.Embed(title='Leaderboard',timestamp=ctx.message.created_at, color=discord.Color.red())
+
+		for count, item in enumerate(res.json()['players']):
+			nickname = item['username']
+			discriminator = item['discriminator']
+			level = item ['level']
+			xp = item['xp']
+			if count<10:
+				rank = count+1
+				embed.add_field(name=f"[#{rank}]   {nickname}", value=f"[{level}]   {xp}XP",inline=False)
+
+		await ctx.send(embed=embed)
+				
+
 @bot.command()
 async def userinfo(ctx,member:discord.Member=None):
 	"""
@@ -234,27 +264,26 @@ async def userinfo(ctx,member:discord.Member=None):
 	embed.set_thumbnail(url=member.avatar_url),
 
 
-	embed.add_field(name='Name:',value=member.mention,inline=True)
+	embed.add_field(name='Name',value=member.mention,inline=True)
 	embed.add_field(name='Booster', value=f'{("Yes" if member.premium_since else "No")}',inline=True)
 
 	try:
 		name = remove_hashtag(str(member))
 		level, rank, xp, msg_count =get_level(name)
+		rank = "#" + str(rank)
 
 		embed.add_field(name='Rank', value=rank,inline=True)
-		embed.add_field(name='Level', value=level,inline=True)
-		embed.add_field(name='XP',value=xp,inline=True)
-		embed.add_field(name='Msg Count', value=msg_count,inline=True)
+		#embed.add_field(name='Level', value=level,inline=True)
+		#embed.add_field(name='XP',value=xp,inline=True)
+		#embed.add_field(name='Msg Count', value=msg_count,inline=True)
 	except Exception as e:
 		print(str(e))
 
 	
 
 	embed.add_field(name=f'Roles:({len(rlist)})',value=''.join([b]),inline=False)
-	embed.add_field(name='Top Role:',value=member.top_role.mention,inline=False)
-
-	embed.add_field(name='Joined', value=f'```{str(member.joined_at)[:16]}```', inline=True)
-	embed.add_field(name='Registered', value=f'```{str(member.created_at)[:16]}```', inline=True)
+	embed.add_field(name='Joined', value=f'{str(member.joined_at)[:16]}', inline=True)
+	embed.add_field(name='Registered', value=f'{str(member.created_at)[:16]}', inline=True)
 		
 	embed.set_footer(text=f'Requested by - {ctx.author}',
 	icon_url=ctx.author.avatar_url)
@@ -380,7 +409,7 @@ async def tj(ctx):
 
 @bot.command()
 async def omri(ctx):
-    await ctx.send("Omri is the 3x Consecutive Holder of the "'Funniest Person In B40'" Title.")
+    await ctx.send("Omri is the 4x Consecutive Holder of the "'Funniest Person In B40'" Title.")
 
 @bot.command()
 async def hug(ctx, *, user : discord.Member=None):
@@ -403,6 +432,12 @@ async def kiss(ctx, *, user : discord.Member=None):
 	await ctx.send(embed=embed)
 
 @bot.command()
+async def kill(ctx, *, user : discord.Member=None):
+	embed = discord.Embed(title=f"{ctx.author.name} kills {user.name}")
+	embed.set_image(url=tenor("among-us-kill"))
+	await ctx.send(embed=embed)
+
+@bot.command()
 async def slap(ctx, *, user : discord.Member=None):
 	embed = discord.Embed(title=f"{ctx.author.name} slaps {user.name}")
 	embed.set_image(url=tenor("anime-slap"))
@@ -419,6 +454,19 @@ async def meme(ctx, *, user : discord.Member=None):
 	embed = discord.Embed(title=f"{ctx.author.name} requested a meme")
 	embed.set_image(url=tenor("meme"))
 	await ctx.send(embed=embed)
+
+@bot.command()
+async def punch(ctx, *, user : discord.Member=None):
+	embed = discord.Embed(title=f"{ctx.author.name} punches {user.name}")
+	embed.set_image(url=tenor("anime-punch"))
+	await ctx.send(embed=embed)
+
+@bot.command()
+async def kick(ctx, *, user : discord.Member=None):
+	embed = discord.Embed(title=f"{ctx.author.name} kicks {user.name}")
+	embed.set_image(url=tenor("anime-kick"))
+	await ctx.send(embed=embed)
+
 
 @bot.command()
 async def penis(ctx, *, user : discord.Member=None):
