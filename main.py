@@ -26,6 +26,7 @@ def get_level(user):
 		    discriminator = item['discriminator']
 		    level = item['level']
 		    msg_count = item['message_count']
+		    xp = item['xp']
 		    if name == user:
 		    	rank = count+1
 		    	return level, rank, xp, msg_count
@@ -37,6 +38,7 @@ def remove_hashtag(username):
 	name = name_cut[0]
 
 	return name
+
 
 
 
@@ -260,17 +262,16 @@ async def userinfo(ctx,member:discord.Member=None):
 
 	embed = discord.Embed(colour=member.color,timestamp=ctx.message.created_at)
 
-	embed.set_author(name=f"{member}   •   {member.id}"),
+	embed.set_author(icon_url=member.avatar_url, name=f"{member}   •   {member.id}"),
 	embed.set_thumbnail(url=member.avatar_url),
 
 
-	embed.add_field(name='Name',value=member.mention,inline=True)
+	embed.add_field(name='Name:',value=member.mention,inline=True)
 	embed.add_field(name='Booster', value=f'{("Yes" if member.premium_since else "No")}',inline=True)
 
 	try:
 		name = remove_hashtag(str(member))
 		level, rank, xp, msg_count =get_level(name)
-		rank = "#" + str(rank)
 
 		embed.add_field(name='Rank', value=rank,inline=True)
 		#embed.add_field(name='Level', value=level,inline=True)
@@ -282,6 +283,8 @@ async def userinfo(ctx,member:discord.Member=None):
 	
 
 	embed.add_field(name=f'Roles:({len(rlist)})',value=''.join([b]),inline=False)
+	#embed.add_field(name='Top Role:',value=member.top_role.mention,inline=False)
+
 	embed.add_field(name='Joined', value=f'{str(member.joined_at)[:16]}', inline=True)
 	embed.add_field(name='Registered', value=f'{str(member.created_at)[:16]}', inline=True)
 		
