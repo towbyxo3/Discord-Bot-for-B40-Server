@@ -16,6 +16,19 @@ from keep_alive import keep_alive
 #set up the global prefix for bot commands
 bot = commands.Bot(command_prefix='^', description="description")
 
+def last_monday():
+    today = datetime.datetime.today()
+    monday = today - datetime.timedelta(days=today.weekday())
+    return monday
+
+
+def next_sunday():
+    today = datetime.datetime.today()
+    sunday = today + datetime.timedelta((6-today.weekday()) % 7)
+    return sunday
+
+
+
 def get_level(user):
 	try:
 		URL = 'https://mee6.xyz/api/plugins/levels/leaderboard/739175633673781259'
@@ -269,14 +282,15 @@ async def userinfo(ctx,member:discord.Member=None):
 
 
 	embed.add_field(name='Name',value=member.mention,inline=True)
-	embed.add_field(name='Booster', value=f'{("Yes" if member.premium_since else "No")}',inline=True)
+	#embed.add_field(name='Booster', value=f'{("Yes" if member.premium_since else "No")}',inline=True)
 
 	try:
 		name = remove_hashtag(str(member))
 		level, rank, xp, msg_count =get_level(name)
 
+		
+		embed.add_field(name='Level', value=level,inline=True)
 		embed.add_field(name='Rank', value=f"#{rank}",inline=True)
-		#embed.add_field(name='Level', value=level,inline=True)
 		#embed.add_field(name='XP',value=xp,inline=True)
 		#embed.add_field(name='Msg Count', value=msg_count,inline=True)
 	except Exception as e:
@@ -470,7 +484,6 @@ async def kick(ctx, *, user : discord.Member=None):
 	embed.set_image(url=tenor("anime-kick"))
 	await ctx.send(embed=embed)
 
-
 @bot.command()
 async def penis(ctx, *, user : discord.Member=None):
 	"""
@@ -568,6 +581,10 @@ async def on_message(message):
 async def on_message(message):
     if "3bood?" in message.content.lower():
         await message.channel.send('glory hole beta tester')
+
+
+
+
 
 my_secret = os.environ['TOKEN']
 keep_alive()
