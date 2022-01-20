@@ -263,7 +263,6 @@ async def userinfo(ctx,member:discord.Member=None):
 	await ctx.send(embed=embed)
 
 
-
 @bot.command()
 async def serverinfo(ctx):
     """
