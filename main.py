@@ -586,8 +586,10 @@ async def on_message(message):
 
 @bot.listen()
 async def on_message(message):
-    if "nigger" in message.content.lower():
-        await message.channel.purge(limit=1)
+	bad_words = ["nigger","niggger","niger","ni55er","ni33er","nibber"]
+	for word in bad_words:
+		if word in message.content.lower():
+			await message.channel.purge(limit=1)
 
 
 @bot.listen()
