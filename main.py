@@ -589,6 +589,7 @@ async def on_message(message):
     if "nigger" in message.content.lower():
         await message.channel.purge(limit=1)
 
+
 @bot.listen()
 async def on_message(message):
 	if not message.author.bot:
