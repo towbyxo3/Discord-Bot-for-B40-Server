@@ -586,6 +586,11 @@ async def on_message(message):
 
 @bot.listen()
 async def on_message(message):
+    if "nigger" in message.content.lower():
+        await message.channel.purge(limit=1)
+
+@bot.listen()
+async def on_message(message):
 	if not message.author.bot:
 		if not message.content.startswith('!'):
 			with open('databases/chat_leaderboard.json', 'r') as file:
@@ -606,6 +611,9 @@ async def on_message(message):
 
 @bot.command()
 async def chat(ctx):
+	"""
+	Returns the leaderboard graphically.
+	"""
 	with open('databases/chat_leaderboard.json', 'r') as file:
 		chat_data = json.load(file)
 
@@ -637,7 +645,7 @@ async def chat(ctx):
 		user_message_count_column.append([message_count_value[1]])
 
 	# Add column to table
-	user_rank_table = tabulate(user_rank_column, tablefmt='plain', headers=['#\n'], numalign='left')
+	user_rank_table = tabulate(user_rank_column, tablefmt='plain', headers=['#\n'], numalign='right')
 	user_name_table = tabulate(user_name_column, tablefmt='plain', headers=['Name\n'], numalign='right')
 	user_message_count_table = tabulate(user_message_count_column, tablefmt='plain', headers=['Messages\n'],
 										numalign='right')
