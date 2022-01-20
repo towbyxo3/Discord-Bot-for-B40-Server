@@ -189,6 +189,9 @@ def tenor(q):
 
 @bot.command()
 async def userinfo(ctx,member:discord.Member=None):
+	"""
+	Display information about a user. 
+	"""
 
 	if member==None:
 		member=ctx.author
@@ -227,21 +230,6 @@ async def userinfo(ctx,member:discord.Member=None):
 	await ctx.send(embed=embed)
 
 
-
-
-
-	"""	embed.add_field(name='Name', value=f'```{member.name}#{member.discriminator}```', inline=True)
-	embed.add_field(name='Roles', value=f'```{b}```', inline=True)
-	embed.add_field(name='Nickname', value=f'```{(member.nick if member.nick else "Not set")}```', inline=True)
-	embed.add_field(name='Joined Server', value=f'```{str(member.joined_at)[:16]}```', inline=True)
-	embed.add_field(name='Joined Discord', value=f'```{str(member.created_at)[:16]}```', inline=True)
-	embed.add_field(name='Roles', value=f'```{len(member.roles)-1}```', inline=True)
-	embed.add_field(name='Highest Role', value=f'```{member.top_role.name}```', inline=True)
-	embed.add_field(name='Color', value=f'```{member.color}```', inline=True)
-	embed.add_field(name='Booster', value=f'```{("Yes" if member.premium_since else "No")}```', inline=True)
-	embed.set_thumbnail(url=member.avatar_url)
-	embed.set_footer(text=f'Used by {ctx.author.name} • {ctx.author.id}', icon_url=ctx.author.avatar_url)
-	await ctx.send(embed=embed)"""
 
 @bot.command()
 async def serverinfo(ctx):
