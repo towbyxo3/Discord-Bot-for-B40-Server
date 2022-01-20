@@ -16,6 +16,30 @@ from keep_alive import keep_alive
 #set up the global prefix for bot commands
 bot = commands.Bot(command_prefix='^', description="description")
 
+def get_level(user):
+	try:
+		URL = 'https://mee6.xyz/api/plugins/levels/leaderboard/739175633673781259'
+
+		res = requests.get(URL)
+		for count, item in enumerate(res.json()['players']):
+		    name = item['username']
+		    discriminator = item['discriminator']
+		    level = item['level']
+		    msg_count = item['message_count']
+		    xp = item['xp']
+		    if name == user:
+		    	rank = count+1
+		    	return level, rank, xp, msg_count
+	except:
+		return None
+
+def remove_hashtag(username):
+	name_cut = username.partition('#')
+	name = name_cut[0]
+
+	return name
+
+
 
 
 
@@ -213,14 +237,23 @@ async def userinfo(ctx,member:discord.Member=None):
 	embed.add_field(name='Name:',value=member.mention,inline=True)
 	embed.add_field(name='Booster', value=f'{("Yes" if member.premium_since else "No")}',inline=True)
 
+	try:
+		name = remove_hashtag(str(member))
+		level, rank, xp, msg_count =get_level(name)
 
+		embed.add_field(name='Rank', value=rank,inline=True)
+		embed.add_field(name='Level', value=level,inline=True)
+		embed.add_field(name='XP',value=xp,inline=True)
+		embed.add_field(name='Msg Count', value=msg_count,inline=True)
+	except Exception as e:
+		print(str(e))
 
 	
 
 	embed.add_field(name=f'Roles:({len(rlist)})',value=''.join([b]),inline=False)
 	embed.add_field(name='Top Role:',value=member.top_role.mention,inline=False)
 
-	embed.add_field(name='Joined ', value=f'```{str(member.joined_at)[:16]}```', inline=True)
+	embed.add_field(name='Joined', value=f'```{str(member.joined_at)[:16]}```', inline=True)
 	embed.add_field(name='Registered', value=f'```{str(member.created_at)[:16]}```', inline=True)
 		
 	embed.set_footer(text=f'Requested by - {ctx.author}',
