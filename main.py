@@ -229,7 +229,9 @@ async def lb(ctx):
 
 
 
-		embed = discord.Embed(title='Leaderboard',timestamp=ctx.message.created_at, color=discord.Color.red())
+		embed = discord.Embed(description = "[Leaderboard](https://mee6.xyz/leaderboard/739175633673781259)",timestamp=ctx.message.created_at, color=discord.Color.red())
+		
+		embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
 
 		for count, item in enumerate(res.json()['players']):
 			nickname = item['username']
@@ -238,7 +240,7 @@ async def lb(ctx):
 			xp = item['xp']
 			if count<10:
 				rank = count+1
-				embed.add_field(name=f"[#{rank}]   {nickname}", value=f"[{level}]   {xp}XP",inline=False)
+				embed.add_field(name=f"#{rank}   {nickname}#{discriminator}", value=f"LEVEL {level}       |        {xp} XP",inline=False)
 
 		await ctx.send(embed=embed)
 				
@@ -257,7 +259,7 @@ async def userinfo(ctx,member:discord.Member=None):
 		if role.name != "@everyone":
 			rlist.append(role.mention)
 
-	b = ", ".join(rlist)
+	b = " ".join(rlist)
 
 
 	embed = discord.Embed(colour=member.color,timestamp=ctx.message.created_at)
@@ -266,30 +268,28 @@ async def userinfo(ctx,member:discord.Member=None):
 	embed.set_thumbnail(url=member.avatar_url),
 
 
-	embed.add_field(name='Name:',value=member.mention,inline=True)
+	embed.add_field(name='Name',value=member.mention,inline=True)
 	embed.add_field(name='Booster', value=f'{("Yes" if member.premium_since else "No")}',inline=True)
 
 	try:
 		name = remove_hashtag(str(member))
 		level, rank, xp, msg_count =get_level(name)
 
-		embed.add_field(name='Rank', value=rank,inline=True)
+		embed.add_field(name='Rank', value=f"#{rank}",inline=True)
 		#embed.add_field(name='Level', value=level,inline=True)
 		#embed.add_field(name='XP',value=xp,inline=True)
 		#embed.add_field(name='Msg Count', value=msg_count,inline=True)
 	except Exception as e:
 		print(str(e))
 
-	
-
-	embed.add_field(name=f'Roles:({len(rlist)})',value=''.join([b]),inline=False)
+	embed.add_field(name=f'Roles ({len(rlist)})',value=''.join([b]),inline=False)
 	#embed.add_field(name='Top Role:',value=member.top_role.mention,inline=False)
 
 	embed.add_field(name='Joined', value=f'{str(member.joined_at)[:16]}', inline=True)
 	embed.add_field(name='Registered', value=f'{str(member.created_at)[:16]}', inline=True)
 		
-	embed.set_footer(text=f'Requested by - {ctx.author}',
-	icon_url=ctx.author.avatar_url)
+	#embed.set_footer(text=f'Requested by - {ctx.author}',
+	#icon_url=ctx.author.avatar_url)
 
 
 	await ctx.send(embed=embed)
