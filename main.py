@@ -579,11 +579,11 @@ async def on_message(message):
 	bad_words = ["nigger","niggger","niger","ni55er","ni33er","nibber"]
 	for word in bad_words:
 		if word in message.content.lower():
-			await message.delete(limit=1)
+			await message.delete()
 
 antibood_mode = False
 @bot.command()
-async def antibood(ctx):
+async def antibood(ctx): 
 	global antibood_mode
 	if antibood_mode:
 		antibood_mode = False
@@ -595,12 +595,9 @@ async def antibood(ctx):
 @bot.listen() 
 async def on_message(message):
 	global antibood_mode
-	if await message.delete(message):
+	if antibood_mode:
 		if message.author.id == 114152481398718468:
-			await message.delete(limit=1)
-
-
-
+			await message.delete()
 
 
 @bot.listen()
