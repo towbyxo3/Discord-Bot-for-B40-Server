@@ -413,16 +413,6 @@ async def word(ctx, *, args):
 
     await ctx.send(embed=embed)
 
-from datalists import tj_dog_pictures
-@bot.command()
-async def tj(ctx):
-	"""
-	Returns a random picture of TJs dogs.
-	"""
-
-	pic = tj_dog_pictures[random.randint(0,len(tj_dog_pictures)-1)]
-	await ctx.send(pic)
-
 
 
 
@@ -589,7 +579,28 @@ async def on_message(message):
 	bad_words = ["nigger","niggger","niger","ni55er","ni33er","nibber"]
 	for word in bad_words:
 		if word in message.content.lower():
-			await message.channel.purge(limit=1)
+			await message.delete(limit=1)
+
+antibood_mode = False
+@bot.command()
+async def antibood(ctx):
+	global antibood_mode
+	if antibood_mode:
+		antibood_mode = False
+		await ctx.send("ANTI BOOD MODE DISABLED")
+	else:
+		antibood_mode = True
+		await ctx.send("ANTI BOOD MODE ACTIVATED")
+
+@bot.listen() 
+async def on_message(message):
+	global antibood_mode
+	if await message.delete(message):
+		if message.author.id == 114152481398718468:
+			await message.delete(limit=1)
+
+
+
 
 
 @bot.listen()
