@@ -583,14 +583,17 @@ async def on_message(message):
 
 antibood_mode = False
 @bot.command()
-async def antibood(ctx): 
-	global antibood_mode
-	if antibood_mode:
-		antibood_mode = False
-		await ctx.send("ANTI BOOD MODE DISABLED")
+async def antibood(ctx):
+	if ctx.author.id != 114152481398718468:
+		global antibood_mode
+		if antibood_mode:
+			antibood_mode = False
+			await ctx.send("ANTI BOOD MODE DISABLED")
+		else:
+			antibood_mode = True
+			await ctx.send("ANTI BOOD MODE ACTIVATED")
 	else:
-		antibood_mode = True
-		await ctx.send("ANTI BOOD MODE ACTIVATED")
+		await ctx.send("Nice try u dog")
 
 @bot.listen() 
 async def on_message(message):
