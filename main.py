@@ -298,13 +298,10 @@ async def userinfo(ctx,member:discord.Member=None):
 
 	b = " ".join(rlist)
 
-
 	embed = discord.Embed(colour=member.color,timestamp=ctx.message.created_at)
 
 	embed.set_author(icon_url=member.avatar_url, name=f"{member}   •   {member.id}"),
 	embed.set_thumbnail(url=member.avatar_url),
-
-
 	embed.add_field(name='Name',value=member.mention,inline=True)
 	#embed.add_field(name='Booster', value=f'{("Yes" if member.premium_since else "No")}',inline=True)
 
@@ -312,7 +309,6 @@ async def userinfo(ctx,member:discord.Member=None):
 		name = remove_hashtag(str(member))
 		level, rank, xp, msg_count =get_level(name)
 
-		
 		embed.add_field(name='Level', value=level,inline=True)
 		embed.add_field(name='Rank', value=f"#{rank}",inline=True)
 		#embed.add_field(name='XP',value=xp,inline=True)
@@ -322,13 +318,11 @@ async def userinfo(ctx,member:discord.Member=None):
 
 	embed.add_field(name=f'Roles ({len(rlist)})',value=''.join([b]),inline=False)
 	#embed.add_field(name='Top Role:',value=member.top_role.mention,inline=False)
-
 	embed.add_field(name='Joined', value=f'{str(member.joined_at)[:16]}', inline=True)
 	embed.add_field(name='Registered', value=f'{str(member.created_at)[:16]}', inline=True)
 		
 	#embed.set_footer(text=f'Requested by - {ctx.author}',
 	#icon_url=ctx.author.avatar_url)
-
 
 	await ctx.send(embed=embed)
 
@@ -348,7 +342,6 @@ async def serverinfo(ctx):
     embed.add_field(name="Channels", value=len(guild.channels))
     embed.add_field(name="Roles", value=len(guild.roles))
     embed.add_field(name="Boosters", value=guild.premium_subscription_count)
-    
     embed.add_field(name="Created at", value=str(guild.created_at.strftime("%b %d, %Y"))[:16])
     embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
@@ -382,8 +375,10 @@ async def country(ctx, *, args):
 
     flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag_data, popu_short, area_short, region, region_s = country_api(args)
     shord_field = c_name_s + " " + flag_icon
+
     embed = discord.Embed(title=c_name_l, description=f"Country in {region}", timestamp=ctx.message.created_at, color=discord.Color.red())
     embed.set_thumbnail(url=flag_data)
+
     embed.add_field(name="Name:", value=c_name_l)
     embed.add_field(name="Capital:", value=capital)
     embed.add_field(name="Short:", value=shord_field)
@@ -393,7 +388,6 @@ async def country(ctx, *, args):
     embed.add_field(name="Currency:", value=curr_name)
     embed.add_field(name="Symbol:", value=currr_symbol)
     embed.add_field(name="Language(s):", value=language_list)
-
     embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
     await ctx.send(embed=embed)
@@ -408,8 +402,10 @@ async def weather(ctx, *, args):
         weather_icon_url, country_name, country, country_icon, humidity, wind, temp_celsius, temp_fahrenheit, weather_description= weather_api(args)
         
         country_field = country + " " + country_icon
+
         embed = discord.Embed(title=args.capitalize(), description=f"A place in {country_name}", timestamp=ctx.message.created_at, color=discord.Color.red())
         embed.set_thumbnail(url=weather_icon_url)
+
         embed.add_field(name="Country:", value=country_field)
         embed.add_field(name="Humidity:", value=humidity)
         embed.add_field(name="Wind:", value=wind)
@@ -428,8 +424,10 @@ async def word(ctx, *, args):
     """
 
     word, phonetic, word_type, definition, example, list_of_synonyms = dictionary(args)
+
     embed = discord.Embed(title=word, description=definition, timestamp=ctx.message.created_at, color=discord.Color.red())
     embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Flag_of_the_United_Kingdom.svg/640px-Flag_of_the_United_Kingdom.svg.png")
+
     embed.add_field(name="Type:", value=word_type)
     embed.add_field(name="Phonetic:", value=phonetic)
     embed.add_field(name="Synonyms:", value=list_of_synonyms)
@@ -438,9 +436,6 @@ async def word(ctx, *, args):
     embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
     await ctx.send(embed=embed)
-
-
-
 
 @bot.command()
 async def omri(ctx):
@@ -458,6 +453,7 @@ async def hug(ctx, *, user : discord.Member=None):
 
 	embed = discord.Embed(title=f"{ctx.author.name} sends hugs to {user.name}")
 	embed.set_image(url=tenor("anime-hugs"))
+
 	await ctx.send(embed=embed)
 
 @bot.command()
@@ -468,6 +464,7 @@ async def kiss(ctx, *, user : discord.Member=None):
 
 	embed = discord.Embed(title=f"{ctx.author.name} sends kisses to {user.name}")
 	embed.set_image(url=tenor("anime-kiss"))
+
 	await ctx.send(embed=embed)
 
 @bot.command()
@@ -478,6 +475,7 @@ async def kill(ctx, *, user : discord.Member=None):
 
 	embed = discord.Embed(title=f"{ctx.author.name} kills {user.name}")
 	embed.set_image(url=tenor("among-us-kill"))
+
 	await ctx.send(embed=embed)
 
 @bot.command()
@@ -488,6 +486,7 @@ async def slap(ctx, *, user : discord.Member=None):
 
 	embed = discord.Embed(title=f"{ctx.author.name} slaps {user.name}")
 	embed.set_image(url=tenor("anime-slap"))
+
 	await ctx.send(embed=embed)
 
 @bot.command()
@@ -498,6 +497,7 @@ async def cringe(ctx, *, user : discord.Member=None):
 
 	embed = discord.Embed(title=f"{ctx.author.name} cringes at {user.name}")
 	embed.set_image(url=tenor("cringe"))
+
 	await ctx.send(embed=embed)
 
 @bot.command()
@@ -508,6 +508,7 @@ async def punch(ctx, *, user : discord.Member=None):
 
 	embed = discord.Embed(title=f"{ctx.author.name} punches {user.name}")
 	embed.set_image(url=tenor("anime-punch"))
+
 	await ctx.send(embed=embed)
 
 @bot.command()
@@ -518,6 +519,7 @@ async def kick(ctx, *, user : discord.Member=None):
 
 	embed = discord.Embed(title=f"{ctx.author.name} kicks {user.name}")
 	embed.set_image(url=tenor("anime-kick"))
+
 	await ctx.send(embed=embed)
 
 @bot.command()
@@ -542,6 +544,7 @@ async def penis(ctx, *, user : discord.Member=None):
 
 	embed = discord.Embed(title='B40 PENIS MEASUREMENT', description=penis_info, timestamp=ctx.message.created_at, color=discord.Color.red())
 	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
+
 	embed.add_field(name="DICK OF:", value=user.mention)
 	embed.add_field(name="LENGTH:", value=len(penis))
 	embed.add_field(name="UNIT:", value="cm")
@@ -565,19 +568,21 @@ async def penis(ctx, *, user : discord.Member=None):
 #    await ctx.send(usermention)
 
 @bot.command()
-async def avatar(ctx, *, user : discord.Member=None):
+async def avatar(ctx,member:discord.Member=None):
 	"""
 	Returns Avatar of user: avatar *@user
 	"""
 
-	try:
-		embed = discord.Embed(title=f"{user.name}")
-		embed.set_image(url=user.avatar_url)
-		await ctx.send(embed=embed)
-	except:        
-		embed = discord.Embed(title=f"{ctx.author.name}")
-		embed.set_image(url=ctx.message.author.avatar_url)
-		await ctx.send(embed=embed)
+	if member==None:
+		member=ctx.author
+
+	
+	embed = discord.Embed(colour=member.color,timestamp=ctx.message.created_at)
+	embed.set_author(icon_url=member.avatar_url, name=f"{member}   •   {member.id}"),
+	embed.set_image(url=member.avatar_url)
+
+	await ctx.send(embed=embed)
+
 
 
 # Events
@@ -590,6 +595,7 @@ async def on_message(message):
   if "who asked?" in message.content.lower():
       with open('pictures/SOVAWHOASKED.png', 'rb') as f:
         picture = discord.File(f)
+
         await message.channel.send(file=picture)
 
 @bot.listen()
@@ -597,6 +603,7 @@ async def on_message(message):
     if "blacky?" in message.content.lower():
         with open('pictures/blacky.png','rb') as f:
           picture = discord.File(f)
+
           await message.channel.send('The Prince of Dubai',file=picture)
 
 @bot.listen()
@@ -604,6 +611,7 @@ async def on_message(message):
     if "nigga" in message.content.lower():
         with open('pictures/nword.png','rb') as f:
           picture = discord.File(f)
+
           await message.channel.send(file=picture)
 
 @bot.listen()
@@ -640,9 +648,11 @@ async def antibood(ctx):
 		global antibood_mode
 		if antibood_mode:
 			antibood_mode = False
+
 			await ctx.send("ANTI BOOD MODE DISABLED")
 		else:
 			antibood_mode = True
+
 			await ctx.send("ANTI BOOD MODE ACTIVATED")
 	else:
 		await ctx.send("Nice try u dog")
@@ -743,17 +753,18 @@ async def chat(ctx):
 async def on_message(message):
 	if not message.author.bot:
 		if not message.content.startswith('^'):
-
 			#open json file
 			with open('databases/chat_user_stats.json', 'r') as file:
 				chat_data = json.load(file)
 				new_user = str(message.author.id)
 				today_date = str(datetime.date.today())
+
 			#if new date, create new json dic
 			if today_date in chat_data:
 				pass
 			else:
 				chat_data[today_date]={}
+
 			#update existing user at date
 			if new_user in chat_data[today_date]:
 				chat_data[today_date][new_user]["total_messages"]+=1
@@ -769,10 +780,7 @@ async def on_message(message):
 				with open('databases/chat_user_stats.json', 'w') as new_user_data:
 					json.dump(chat_data, new_user_data, indent=4)
 			
-
-
-
-
+			#SERVERCHAT 
 			with open('databases/server_stats.json', 'r') as file:
 				chat_data = json.load(file)
 				if today_date in chat_data:
