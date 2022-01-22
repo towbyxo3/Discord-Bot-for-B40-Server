@@ -16,35 +16,31 @@ from tabulate import tabulate
 
 
 #set up the global prefix for bot commands
-bot = commands.Bot(command_prefix='^', description="description")
+global_prefix = '^'
+bot = commands.Bot(command_prefix=global_prefix, description=f"With the prefix {global_prefix} you are able to use following commands \n *optional")
 
 
 
 def get_unique_chat_participants(date):
+	"""
+	Counts unique chat participants at a particular date.
+	"""
+
 	with open('databases/chat_user_stats.json','r') as file:
 		chat_data = json.load(file)
+
 		return len(chat_data[date])
 		
 
-
-def last_monday():
-    today = datetime.datetime.today()
-    monday = today - datetime.timedelta(days=today.weekday())
-    return monday
-
-
-def next_sunday():
-    today = datetime.datetime.today()
-    sunday = today + datetime.timedelta((6-today.weekday()) % 7)
-    return sunday
-
-
-
 def get_level(user):
+	"""
+	Fetches level, rank, xp, message count data from mee6s leaderboard
+	"""
+
 	try:
 		URL = 'https://mee6.xyz/api/plugins/levels/leaderboard/739175633673781259'
-
 		res = requests.get(URL)
+
 		for count, item in enumerate(res.json()['players']):
 		    name = item['username']
 		    discriminator = item['discriminator']
@@ -53,11 +49,16 @@ def get_level(user):
 		    xp = item['xp']
 		    if name == user:
 		    	rank = count+1
+
 		    	return level, rank, xp, msg_count
 	except:
 		return None
 
 def remove_hashtag(username):
+	"""
+	Removes the discriminatorof in a users name
+	"""
+
 	name_cut = username.partition('#')
 	name = name_cut[0]
 
@@ -69,37 +70,48 @@ def remove_hashtag(username):
 
 
 def get_quote():
+	"""
+	Fetches a random quote off https://zenquotes.io/api/random
+	"""
+
 	response = requests.get("https://zenquotes.io/api/random")
 	json_data = json.loads(response.text)
 	quote = json_data[0]['q'] + " -" + json_data[0]['a']
+
 	return (quote)
 
 
 
 def GetStreet(Add):
 	"""
-	Base on the location given, it returns a pic of the location.
+	Based on the location given, it returns a googlestreet-view picture of the location.
 	"""
+
 	key = "&key=" + "AIzaSyDnmmANZ2R50QtRlioo2HzB8AabSVhjKzM" 
 	base = "https://maps.googleapis.com/maps/api/streetview?size=1200x800&location="
-	MyUrl = base + parse.quote_plus(Add) + key #added url encoding
+	street_view_url = base + parse.quote_plus(Add) + key #added url encoding
 	fi = "test" + ".jpg"
 
-	return MyUrl
+	return street_view_url
 
 
 
 def dictionary(q):
+	"""
+	Fetches information about a word from https://api.dictionaryapi.dev
+	"""
+
 	url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{q}"
 	data = requests.get(url).json()
 
 	main = data[0]
 
 	word = main["word"]
-	phonetic = main["phonetic"]
 
+	phonetic = main["phonetic"]
 	word_type = main["meanings"][0]["partOfSpeech"]
 	definition = main["meanings"][0]["definitions"][0]["definition"]
+
 	try:
 		example = main["meanings"][0]["definitions"][0]["example"]
 	except:
@@ -114,6 +126,7 @@ def dictionary(q):
 			break
 	if len(list_of_synonyms)==0:
 		list_of_synonyms = "None given"
+
 	return word, phonetic, word_type, definition, example, list_of_synonyms
 
 
@@ -121,8 +134,6 @@ def weather_api(q):
     """
     API function to gather weather information and returns them as tuple.
     API source: https://openweathermap.org/ 
-
-    q: a place (could be a city or a country) of which weather data should be displayed 
     """
 
     WEATHER_API_KEY = "11a8994c28e7df09bfbd1124d1554bad"
@@ -155,8 +166,6 @@ def human_format(num):
     """
     converts population numbers to readable formats using K, M. and returns them as string.
 
-    num: population number
-
     code from https://stackoverflow.com/a/45846841
     """
 
@@ -166,14 +175,13 @@ def human_format(num):
     while abs(num) >= 1000:
         magnitude += 1
         num /= 1000.0
+
     return '{}{}'.format('{:f}'.format(num).rstrip('0').rstrip('.'), ['', ' K', ' M', ' B', ' T'][magnitude])
 
 def country_api(country):
     """
     API function that gathers information about a country and returns them as tuple.
     API source: https://restcountries.com/
-    
-    country: any country name
     """
 
     url =f"https://restcountries.com/v3.1/name/{country}"
@@ -227,6 +235,7 @@ def tenor(q):
     if r.status_code == 200:
         # load the GIFs using the urls for the smaller GIF sizes
         tenorgifs = json.loads(r.content)
+		
         return (tenorgifs["results"][random_pic]["media"][0]["mediumgif"]["url"])
     else:
         return None
@@ -240,39 +249,43 @@ def tenor(q):
 
 @bot.command()
 async def lb(ctx):
-		URL = 'https://mee6.xyz/api/plugins/levels/leaderboard/739175633673781259'
+	"""
+	Returns server leaderboard: lb
+	"""
 
-		res = requests.get(URL)
-		for count, item in enumerate(res.json()['players']):
-			name = item['username']
-			id_user = item['id']
-			discriminator = item['discriminator']
-			level = item['level']
-			msg_count = item['message_count']
-			xp = item['xp']
+	URL = 'https://mee6.xyz/api/plugins/levels/leaderboard/739175633673781259'
+
+	res = requests.get(URL)
+	for count, item in enumerate(res.json()['players']):
+		name = item['username']
+		id_user = item['id']
+		discriminator = item['discriminator']
+		level = item['level']
+		msg_count = item['message_count']
+		xp = item['xp']
 
 
 
-		embed = discord.Embed(description = "[Leaderboard](https://mee6.xyz/leaderboard/739175633673781259)",timestamp=ctx.message.created_at, color=discord.Color.red())
-		
-		embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
+	embed = discord.Embed(description = "[Leaderboard](https://mee6.xyz/leaderboard/739175633673781259)",timestamp=ctx.message.created_at, color=discord.Color.red())
+	
+	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
 
-		for count, item in enumerate(res.json()['players']):
-			nickname = item['username']
-			discriminator = item['discriminator']
-			level = item ['level']
-			xp = item['xp']
-			if count<10:
-				rank = count+1
-				embed.add_field(name=f"#{rank}   {nickname}#{discriminator}", value=f"LEVEL {level}       |        {xp} XP",inline=False)
+	for count, item in enumerate(res.json()['players']):
+		nickname = item['username']
+		discriminator = item['discriminator']
+		level = item ['level']
+		xp = item['xp']
+		if count<10:
+			rank = count+1
+			embed.add_field(name=f"#{rank}   {nickname}#{discriminator}", value=f"LEVEL {level}       |        {xp} XP",inline=False)
 
-		await ctx.send(embed=embed)
+	await ctx.send(embed=embed)
 				
 
 @bot.command()
 async def userinfo(ctx,member:discord.Member=None):
 	"""
-	Display information about a user. 
+	Returns information about a user: userinfo *@user
 	"""
 
 	if member==None:
@@ -323,7 +336,7 @@ async def userinfo(ctx,member:discord.Member=None):
 @bot.command()
 async def serverinfo(ctx):
     """
-    This command shows an overview of the server and displays information like creation date or member count.
+    Returns information about the server: serverinfo
     """
 
     guild = ctx.guild
@@ -343,6 +356,10 @@ async def serverinfo(ctx):
 
 @bot.command()
 async def map(ctx, *, args):
+	"""
+	Returns picture of an address/place: map [place/address/sight]
+	"""
+
 	picture = GetStreet(args)
 	embed = discord.Embed(title=args)
 	embed.set_image(url=picture)
@@ -360,7 +377,7 @@ async def quote(ctx):
 @bot.command()
 async def country(ctx, *, args):
     """
-    Shows extensive stats about a country requested by the user.
+    Returns extensive stats of a country: country [country name]
     """
 
     flag_icon, c_name_s, c_name_l, capital, curr_name, currr_symbol, language_list, flag_data, popu_short, area_short, region, region_s = country_api(args)
@@ -384,7 +401,7 @@ async def country(ctx, *, args):
 @bot.command()
 async def weather(ctx, *, args):
     """
-    Shows extensive weather stats about a place requested by the user.
+    Returns weather stats of a location: weather [location]
     """
     
     try:
@@ -407,7 +424,7 @@ async def weather(ctx, *, args):
 @bot.command()
 async def word(ctx, *, args):
     """
-    dictionary ish display of a word.
+    Returns dictionary-entry of a word: word [word]
     """
 
     word, phonetic, word_type, definition, example, list_of_synonyms = dictionary(args)
@@ -427,12 +444,16 @@ async def word(ctx, *, args):
 
 @bot.command()
 async def omri(ctx):
-    await ctx.send("Omri is the 4x Consecutive Holder of the "'Funniest Person In B40'" Title.")
+	"""
+	Returns an important piece of information about Omri
+	"""
+
+	await ctx.send("Omri is the 4x Consecutive Holder of the "'Funniest Person In B40'" Title.")
 
 @bot.command()
 async def hug(ctx, *, user : discord.Member=None):
 	"""
-	sends an embed Discord message including who wants to hug who. A random hug-related gif will be attached.
+	Returns hug gif: hug @user
 	"""
 
 	embed = discord.Embed(title=f"{ctx.author.name} sends hugs to {user.name}")
@@ -442,7 +463,7 @@ async def hug(ctx, *, user : discord.Member=None):
 @bot.command()
 async def kiss(ctx, *, user : discord.Member=None):
 	"""
-	sends an embed Discord message including who wants to kiss who. A random kiss related gif will be attached.
+	Returns kiss gif: kiss @user
 	"""
 
 	embed = discord.Embed(title=f"{ctx.author.name} sends kisses to {user.name}")
@@ -451,36 +472,50 @@ async def kiss(ctx, *, user : discord.Member=None):
 
 @bot.command()
 async def kill(ctx, *, user : discord.Member=None):
+	"""
+	Returns kill gif: kill @user
+	"""
+
 	embed = discord.Embed(title=f"{ctx.author.name} kills {user.name}")
 	embed.set_image(url=tenor("among-us-kill"))
 	await ctx.send(embed=embed)
 
 @bot.command()
 async def slap(ctx, *, user : discord.Member=None):
+	"""
+	Returns slap gif: slap @user
+	"""
+
 	embed = discord.Embed(title=f"{ctx.author.name} slaps {user.name}")
 	embed.set_image(url=tenor("anime-slap"))
 	await ctx.send(embed=embed)
 
 @bot.command()
 async def cringe(ctx, *, user : discord.Member=None):
+	"""
+	Returns cringe gif: cringe @user
+	"""
+
 	embed = discord.Embed(title=f"{ctx.author.name} cringes at {user.name}")
 	embed.set_image(url=tenor("cringe"))
 	await ctx.send(embed=embed)
 
 @bot.command()
-async def meme(ctx, *, user : discord.Member=None):
-	embed = discord.Embed(title=f"{ctx.author.name} requested a meme")
-	embed.set_image(url=tenor("meme"))
-	await ctx.send(embed=embed)
-
-@bot.command()
 async def punch(ctx, *, user : discord.Member=None):
+	"""
+	Returns punch gif: punch @user
+	"""
+
 	embed = discord.Embed(title=f"{ctx.author.name} punches {user.name}")
 	embed.set_image(url=tenor("anime-punch"))
 	await ctx.send(embed=embed)
 
 @bot.command()
 async def kick(ctx, *, user : discord.Member=None):
+	"""
+	Returns kick gif: kick @user
+	"""
+
 	embed = discord.Embed(title=f"{ctx.author.name} kicks {user.name}")
 	embed.set_image(url=tenor("anime-kick"))
 	await ctx.send(embed=embed)
@@ -488,7 +523,7 @@ async def kick(ctx, *, user : discord.Member=None):
 @bot.command()
 async def penis(ctx, *, user : discord.Member=None):
 	"""
-	Shows stats about the requested persons penis.
+	Returns penis stats of user: penis @user
 	"""
 
 	penis = "8" + "="*random.randint(0, 18) + "D"
@@ -517,20 +552,24 @@ async def penis(ctx, *, user : discord.Member=None):
 
 
 # dont delete this, need this for future reference
-@bot.command()
-async def test(ctx):
-    SENDER_OF_THE_MESSAGE = message.author.mention
-    await ctx.send(SENDER_OF_THE_MESSAGE)
+#@bot.command()
+#async def test(ctx):
+#    SENDER_OF_THE_MESSAGE = message.author.mention
+#    await ctx.send(SENDER_OF_THE_MESSAGE)
 
 #dont delete this either
-@bot.command()
-async def test2(ctx, *,  user : discord.Member=None):
-    usermention = user.mention
+#@bot.command()
+#async def test2(ctx, *,  user : discord.Member=None):
+#    usermention = user.mention
 
-    await ctx.send(usermention)
+#    await ctx.send(usermention)
 
 @bot.command()
 async def avatar(ctx, *, user : discord.Member=None):
+	"""
+	Returns Avatar of user: avatar *@user
+	"""
+
 	try:
 		embed = discord.Embed(title=f"{user.name}")
 		embed.set_image(url=user.avatar_url)
@@ -593,6 +632,10 @@ async def on_message(message):
 antibood_mode = False
 @bot.command()
 async def antibood(ctx):
+	"""
+	Toggles 3boods ability to chat: antibood
+	"""
+
 	if ctx.author.id != 114152481398718468:
 		global antibood_mode
 		if antibood_mode:
@@ -755,6 +798,10 @@ async def on_message(message):
 
 @bot.command()
 async def serverchat(ctx,chat_date):
+	"""
+	Returns chat stats of a particular date: serverchat YYYY-DD-MM
+	"""
+
 	try:
 		with open('databases/server_stats.json','r') as file:
 			server_chat_data = json.load(file)
