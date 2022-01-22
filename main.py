@@ -18,6 +18,15 @@ from tabulate import tabulate
 #set up the global prefix for bot commands
 bot = commands.Bot(command_prefix='^', description="description")
 
+
+
+def get_unique_chat_participants(date):
+	with open('databases/chat_user_stats.json','r') as file:
+		chat_data = json.load(file)
+		return len(chat_data[date])
+		
+
+
 def last_monday():
     today = datetime.datetime.today()
     monday = today - datetime.timedelta(days=today.weekday())
@@ -320,14 +329,14 @@ async def serverinfo(ctx):
     guild = ctx.guild
     embed = discord.Embed(title='B40', description="Community for autistic, depressed people", timestamp=ctx.message.created_at, color=discord.Color.red())
     embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
-    embed.add_field(name="Owner:", value="blacky#5204")
+    embed.add_field(name="Owner", value="blacky#5204")
     embed.add_field(name="Server ID", value=guild.id)
-    embed.add_field(name="Members:", value=guild.member_count)
-    embed.add_field(name="Channels:", value=len(guild.channels))
-    embed.add_field(name="Roles:", value=len(guild.roles))
-    embed.add_field(name="Booster Status:", value=guild.premium_subscription_count)
+    embed.add_field(name="Members", value=guild.member_count)
+    embed.add_field(name="Channels", value=len(guild.channels))
+    embed.add_field(name="Roles", value=len(guild.roles))
+    embed.add_field(name="Boosters", value=guild.premium_subscription_count)
     
-    embed.add_field(name="Created at:", value=str(guild.created_at)[:16])
+    embed.add_field(name="Created at", value=str(guild.created_at.strftime("%b %d, %Y"))[:16])
     embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
     await ctx.send(embed=embed)
@@ -685,6 +694,90 @@ async def chat(ctx):
 	image_template.convert('RGB').save('chat_leaderboard.jpg', 'JPEG')
 
 	await ctx.send(file=discord.File('chat_leaderboard.jpg'))
+
+
+@bot.listen()
+async def on_message(message):
+	if not message.author.bot:
+		if not message.content.startswith('^'):
+
+			#open json file
+			with open('databases/chat_user_stats.json', 'r') as file:
+				chat_data = json.load(file)
+				new_user = str(message.author.id)
+				today_date = str(datetime.date.today())
+			#if new date, create new json dic
+			if today_date in chat_data:
+				pass
+			else:
+				chat_data[today_date]={}
+			#update existing user at date
+			if new_user in chat_data[today_date]:
+				chat_data[today_date][new_user]["total_messages"]+=1
+				if len(message.clean_content)>600 or "http" in message.content.lower():
+					chat_data[today_date][new_user]['total_messages_length']+=5
+				else:
+					chat_data[today_date][new_user]['total_messages_length']+=len(message.clean_content)
+				with open('databases/chat_user_stats.json', 'w') as update_user_data:
+					json.dump(chat_data, update_user_data, indent=4)
+
+			else:
+				chat_data[today_date][new_user] = {"total_messages":1,"total_messages_length": len(message.clean_content)}
+				with open('databases/chat_user_stats.json', 'w') as new_user_data:
+					json.dump(chat_data, new_user_data, indent=4)
+			
+
+
+
+
+			with open('databases/server_stats.json', 'r') as file:
+				chat_data = json.load(file)
+				if today_date in chat_data:
+					pass
+				else:
+					chat_data[today_date]={"total_server_messages":0,"total_server_messages_length":len(message.clean_content),"links":0,"members":message.guild.member_count,"files":0}
+					with open('databases/server_stats.json', 'w') as new_user_data:
+						json.dump(chat_data, new_user_data, indent=4)
+				
+				with open('databases/server_stats.json', 'r') as file:
+					chat_data = json.load(file)
+					if len(message.clean_content)>600 or "http" in message.content.lower():
+						chat_data[today_date]['total_server_messages_length']+=5
+					else:
+						chat_data[today_date]['total_server_messages_length']+=len(message.clean_content)
+					if "http" in message.content.lower():
+						chat_data[today_date]['links']+=1
+					chat_data[today_date]["total_server_messages"]+=1
+					if len(message.attachments) >0:
+						chat_data[today_date]["files"]+=1					
+					with open('databases/server_stats.json', 'w') as new_user_data:
+						json.dump(chat_data, new_user_data, indent=4)
+
+@bot.command()
+async def serverchat(ctx,chat_date):
+	try:
+		with open('databases/server_stats.json','r') as file:
+			server_chat_data = json.load(file)
+			total_messages = server_chat_data[chat_date]["total_server_messages"]
+			total_characters = server_chat_data[chat_date]["total_server_messages_length"]
+			avg_msg_len = total_characters/total_messages
+
+			guild = ctx.guild
+			embed = discord.Embed(title=f'B40 Chat Stats [{chat_date}]', timestamp=ctx.message.created_at, color=discord.Color.red())
+			embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
+			embed.add_field(name="Messages", value = total_messages)
+			embed.add_field(name="Characters", value = total_characters)
+			embed.add_field(name="Average", value = f"~{round(avg_msg_len,1)} chars/msg")
+			embed.add_field(name="Files", value = server_chat_data[chat_date]["files"])
+			embed.add_field(name="Links", value = server_chat_data[chat_date]["links"])
+			embed.add_field(name="Participants", value = get_unique_chat_participants(chat_date))
+			embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
+
+			await ctx.send(embed=embed)
+	except:
+		await ctx.send("Check formatting: ^serverinfo YYYY-MM-DD")
+
+
 
 
 my_secret = os.environ['TOKEN']
