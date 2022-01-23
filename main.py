@@ -19,6 +19,18 @@ from tabulate import tabulate
 global_prefix = '^'
 bot = commands.Bot(command_prefix=global_prefix, description=f"With the prefix {global_prefix} you are able to use following commands \n *optional")
 
+def get_date_user_chat_information(chat_date):
+	with open('databases/chat_user_stats.json', 'r') as file:
+		chat_data = json.load(file)
+		data = chat_data[chat_date]
+		top_10_date = sorted(data, key=lambda x: (data[x]['total_messages']),reverse=True)
+		top_10_messages = []
+		top_10_messages_length = []
+		for i in top_10_date:
+			top_10_messages.append(chat_data[chat_date][i]["total_messages"])
+			top_10_messages_length.append(chat_data[chat_date][i]["total_messages_length"])
+		return top_10_date,top_10_messages, top_10_messages_length
+		
 
 
 def get_unique_chat_participants(date):
@@ -325,6 +337,8 @@ async def userinfo(ctx,member:discord.Member=None):
 	#icon_url=ctx.author.avatar_url)
 
 	await ctx.send(embed=embed)
+
+
 
 
 @bot.command()
@@ -803,6 +817,32 @@ async def on_message(message):
 						chat_data[today_date]["files"]+=1					
 					with open('databases/server_stats.json', 'w') as new_user_data:
 						json.dump(chat_data, new_user_data, indent=4)
+
+@bot.command()
+async def userchat(ctx,chat_date):
+	
+	top_10_date,top_10_messages, top_10_messages_length = get_date_user_chat_information(chat_date)
+
+	embed = discord.Embed(title=f"User Chat Leaderboard {chat_date}", timestamp=ctx.message.created_at, color=discord.Color.red())
+	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
+	for i in range(10):
+		rank = i+1
+		userid = top_10_date[i]
+		try:
+			userid = await ctx.author.guild.fetch_member(userid)
+		except:
+			pass
+
+		total_msg = top_10_messages[i]
+		total_msg_len = top_10_messages_length[i]
+		avg = round(total_msg_len/total_msg,1)
+
+		embed.add_field(name=f"{rank}. {userid}", value=f" {total_msg} :envelope:  | {total_msg_len} :abc:  |  {avg} Chars/Msg",inline=False)
+	await ctx.send(embed=embed)
+
+
+
+
 
 @bot.command()
 async def serverchat(ctx,chat_date):

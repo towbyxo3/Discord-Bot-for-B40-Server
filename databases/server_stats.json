@@ -7,10 +7,17 @@
         "files": 3
     },
     "2022-01-22": {
-        "total_server_messages": 5772,
-        "total_server_messages_length": 101569,
-        "links": 47,
+        "total_server_messages": 11812,
+        "total_server_messages_length": 190728,
+        "links": 108,
         "members": 567,
-        "files": 46
+        "files": 127
+    },
+    "2022-01-23": {
+        "total_server_messages": 3024,
+        "total_server_messages_length": 52146,
+        "links": 65,
+        "members": 569,
+        "files": 59
     }
 }
