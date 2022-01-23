@@ -19,6 +19,17 @@ from tabulate import tabulate
 global_prefix = '^'
 bot = commands.Bot(command_prefix=global_prefix, description=f"With the prefix {global_prefix} you are able to use following commands \n *optional")
 
+
+
+def get_user_chat_date_information(chat_date,id):
+	with open('databases/chat_user_stats.json','r') as file:
+		chat_data = json.load(file) 
+		data = chat_data[chat_date]
+		total_messages = data[str(id)]['total_messages']
+		total_messages_length = data[str(id)]['total_messages_length']
+		return total_messages, total_messages_length
+
+
 def get_date_user_chat_information(chat_date):
 	with open('databases/chat_user_stats.json', 'r') as file:
 		chat_data = json.load(file)
@@ -871,6 +882,29 @@ async def serverchat(ctx,chat_date):
 			await ctx.send(embed=embed)
 	except:
 		await ctx.send("Check formatting: ^serverinfo YYYY-MM-DD")
+
+@bot.command()
+async def userchatdate(ctx,chat_date,member: discord.Member = None):
+	try:	
+		if member==None:
+			member=ctx.author
+
+		total_messages, total_messages_length = get_user_chat_date_information(chat_date,member.id)
+		avg = round(total_messages_length/total_messages,1)
+
+		
+		embed = discord.Embed(colour=member.color,timestamp=ctx.message.created_at)
+
+		embed.set_author(icon_url=member.avatar_url, name=f"{member}   •   {chat_date}"),
+		embed.set_thumbnail(url=member.avatar_url)
+		embed.add_field(name='Messages',value=total_messages,inline=True)
+		embed.add_field(name='Characters',value=total_messages_length,inline=True)
+		embed.add_field(name='Chars/Msg',value=avg,inline=True)
+		
+
+		await ctx.send(embed=embed)
+	except:
+		await ctx.send("No messages found")
 
 
 
