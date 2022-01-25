@@ -392,6 +392,15 @@ async def avatar(ctx,member:discord.Member=None):
 async def on_ready():
     print('My Ready is Body')
 
+
+@bot.listen()
+async def on_message(message):
+  if "ninja" in message.content.lower():
+      with open('pictures/ninja.jpg', 'rb') as f:
+        picture = discord.File(f)
+
+        await message.channel.send(file=picture)
+
 @bot.listen()
 async def on_message(message):
   if "who asked?" in message.content.lower():
@@ -407,14 +416,14 @@ async def on_message(message):
           picture = discord.File(f)
 
           await message.channel.send('The Prince of Dubai',file=picture)
-
+"""
 @bot.listen()
 async def on_message(message):
     if "nigga" in message.content.lower():
         with open('pictures/nword.png','rb') as f:
           picture = discord.File(f)
 
-          await message.channel.send(file=picture)
+          await message.channel.send(file=picture)"""
 
 @bot.listen()
 async def on_message(message):
@@ -450,7 +459,7 @@ async def on_message(message):
 				chat_data[new_user] = 1
 				with open('databases/ncounter.json', 'w') as new_user_data:
 					json.dump(chat_data, new_user_data, indent=4)
-			return None
+			await message.delete()
 
 
 
@@ -537,6 +546,8 @@ async def chat(ctx):
 	image_template.convert('RGB').save('chat_leaderboard.jpg', 'JPEG')
 
 	await ctx.send(file=discord.File('chat_leaderboard.jpg'))
+
+
 
 
 @bot.listen()
