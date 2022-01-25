@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import datetime
+import time
 import os
 import random
 from urllib import parse, request
@@ -459,6 +460,7 @@ async def on_message(message):
 				chat_data[new_user] = 1
 				with open('databases/ncounter.json', 'w') as new_user_data:
 					json.dump(chat_data, new_user_data, indent=4)
+			time.sleep(1)
 			await message.delete()
 
 
