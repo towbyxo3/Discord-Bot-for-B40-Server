@@ -14,10 +14,24 @@
         "files": 127
     },
     "2022-01-23": {
-        "total_server_messages": 3818,
-        "total_server_messages_length": 64936,
-        "links": 72,
+        "total_server_messages": 3871,
+        "total_server_messages_length": 66356,
+        "links": 73,
         "members": 569,
         "files": 71
+    },
+    "2022-01-24": {
+        "total_server_messages": 5482,
+        "total_server_messages_length": 93441,
+        "links": 93,
+        "members": 571,
+        "files": 70
+    },
+    "2022-01-25": {
+        "total_server_messages": 91,
+        "total_server_messages_length": 1717,
+        "links": 2,
+        "members": 583,
+        "files": 5
     }
 }

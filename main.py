@@ -18,26 +18,24 @@ from chatstatsfunc import *
 from formattingfunc import *
 
 #set up the global prefix for bot commands
+intents = discord.Intents.default()
+intents.members = True
+
 global_prefix = '^'
-bot = commands.Bot(command_prefix=global_prefix, description=f"With the prefix {global_prefix} you are able to use following commands \n *optional")
-
-
-
+bot = commands.Bot(command_prefix=global_prefix, description=f"With the prefix {global_prefix} you are able to use following commands \n *optional",intents = intents)
 
 
 #BOT COMMANDS
 #the following bot commands are triggered if message sent by a user consists of the prefix followed by the command function name.
 # For example, to trigger the serverinfo function, it would be   "   ^serverinfo    "
 #some commands can 
-
-
-
 @bot.command()
 async def lb(ctx):
 	"""
 	Returns server leaderboard: lb
 	"""
 
+	#get data from mee6s leaderboard
 	URL = 'https://mee6.xyz/api/plugins/levels/leaderboard/739175633673781259'
 
 	res = requests.get(URL)
@@ -49,23 +47,27 @@ async def lb(ctx):
 		msg_count = item['message_count']
 		xp = item['xp']
 
-
-
+	#Structuring the embed message using the data obtained from mee6s website
 	embed = discord.Embed(description = "[Leaderboard](https://mee6.xyz/leaderboard/739175633673781259)",timestamp=ctx.message.created_at, color=discord.Color.red())
-	
+
 	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
 
+	#create fields for the top 10 
 	for count, item in enumerate(res.json()['players']):
 		nickname = item['username']
 		discriminator = item['discriminator']
 		level = item ['level']
 		xp = item['xp']
-		if count<10:
+		if count<10: #how many ppl the leaderboard shows
 			rank = count+1
 			embed.add_field(name=f"#{rank}   {nickname}#{discriminator}", value=f"LEVEL {level}       |        {xp} XP",inline=False)
 
 	await ctx.send(embed=embed)
-				
+
+
+
+
+
 
 @bot.command()
 async def userinfo(ctx,member:discord.Member=None):
@@ -76,12 +78,12 @@ async def userinfo(ctx,member:discord.Member=None):
 	if member==None:
 		member=ctx.author
 
-	rlist = []
+	rlist = [] #list of all the roles the user has
 	for role in member.roles:
 		if role.name != "@everyone":
 			rlist.append(role.mention)
 
-	b = " ".join(rlist)
+	b = " ".join(rlist) #format the list 
 
 	embed = discord.Embed(colour=member.color,timestamp=ctx.message.created_at)
 
@@ -112,6 +114,19 @@ async def userinfo(ctx,member:discord.Member=None):
 	await ctx.send(embed=embed)
 
 
+@bot.command()
+async def moveall(ctx: commands.Context):
+	if ctx.author.guild_permissions.kick_members:
+		for voice_channel in ctx.guild.voice_channels:
+			if voice_channel is ctx.author.voice.channel:
+				print(voice_channel)
+				continue
+			for x in voice_channel.members:
+				print(x.name)
+				await x.move_to(ctx.author.voice.channel) 
+
+
+
 
 
 @bot.command()
@@ -129,7 +144,7 @@ async def serverinfo(ctx):
     embed.add_field(name="Channels", value=len(guild.channels))
     embed.add_field(name="Roles", value=len(guild.roles))
     embed.add_field(name="Boosters", value=guild.premium_subscription_count)
-    embed.add_field(name="Created at", value=str(guild.created_at.strftime("%b %d, %Y"))[:16])
+    embed.add_field(name="Created on", value=str(guild.created_at.strftime("%b %d, %Y"))[:16])
     embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
 
     await ctx.send(embed=embed)
@@ -418,38 +433,26 @@ async def on_message(message):
         await message.channel.send('glory hole beta tester')
 
 @bot.listen()
-async def on_message(message):
-	bad_words = ["nigger","niggger","niger","ni55er","ni33er","nibber"]
+async def on_message(message):	
+	bad_words = ["nigga","nigger","niggger","niger","ni55er","ni33er","nibber","nibba"]
 	for word in bad_words:
 		if word in message.content.lower():
-			await message.delete()
 
-antibood_mode = False
-@bot.command()
-async def antibood(ctx):
-	"""
-	Toggles 3boods ability to chat: antibood
-	"""
+			
+			with open('databases/ncounter.json', 'r') as file:
+				chat_data = json.load(file)
+				new_user = str(message.author.id)
+			if new_user in chat_data:
+				chat_data[new_user] += 1
+				with open('databases/ncounter.json', 'w') as update_user_data:
+					json.dump(chat_data, update_user_data, indent=4)
+			else:
+				chat_data[new_user] = 1
+				with open('databases/ncounter.json', 'w') as new_user_data:
+					json.dump(chat_data, new_user_data, indent=4)
+			return None
 
-	if ctx.author.id != 114152481398718468:
-		global antibood_mode
-		if antibood_mode:
-			antibood_mode = False
 
-			await ctx.send("ANTI BOOD MODE DISABLED")
-		else:
-			antibood_mode = True
-
-			await ctx.send("ANTI BOOD MODE ACTIVATED")
-	else:
-		await ctx.send("Nice try u dog")
-
-@bot.listen() 
-async def on_message(message):
-	global antibood_mode
-	if antibood_mode:
-		if message.author.id == 114152481398718468:
-			await message.delete()
 
 
 @bot.listen()
@@ -644,6 +647,7 @@ async def serverchat(ctx,chat_date = str(datetime.date.today())):
 			await ctx.send(embed=embed)
 	except:
 		await ctx.send("Check formatting: ^serverinfo YYYY-MM-DD")
+
 
 @bot.command()
 async def userchatdate(ctx,chat_date,member: discord.Member = None):
