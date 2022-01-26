@@ -35,10 +35,10 @@
         "files": 74
     },
     "2022-01-26": {
-        "total_server_messages": 892,
-        "total_server_messages_length": 16935,
-        "links": 11,
+        "total_server_messages": 2525,
+        "total_server_messages_length": 43711,
+        "links": 23,
         "members": 606,
-        "files": 10
+        "files": 24
     }
 }

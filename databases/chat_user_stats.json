@@ -963,56 +963,56 @@
     },
     "2022-01-26": {
         "126077599465078785": {
-            "total_messages": 18,
-            "total_messages_length": 279
+            "total_messages": 60,
+            "total_messages_length": 995
         },
         "334671917287997441": {
             "total_messages": 8,
             "total_messages_length": 105
         },
         "334805610027679754": {
-            "total_messages": 64,
-            "total_messages_length": 1183
+            "total_messages": 182,
+            "total_messages_length": 2879
         },
         "283715405934231552": {
-            "total_messages": 17,
-            "total_messages_length": 255
+            "total_messages": 52,
+            "total_messages_length": 593
         },
         "336233089548288010": {
-            "total_messages": 37,
-            "total_messages_length": 459
+            "total_messages": 67,
+            "total_messages_length": 954
         },
         "455201281129316356": {
-            "total_messages": 63,
-            "total_messages_length": 1710
+            "total_messages": 85,
+            "total_messages_length": 2064
         },
         "326315806335959041": {
-            "total_messages": 85,
-            "total_messages_length": 2744
+            "total_messages": 92,
+            "total_messages_length": 2991
         },
         "123433171789283332": {
-            "total_messages": 36,
-            "total_messages_length": 758
+            "total_messages": 37,
+            "total_messages_length": 767
         },
         "114152481398718468": {
-            "total_messages": 15,
-            "total_messages_length": 315
+            "total_messages": 111,
+            "total_messages_length": 1746
         },
         "176490547479838723": {
-            "total_messages": 76,
-            "total_messages_length": 1101
+            "total_messages": 130,
+            "total_messages_length": 2200
         },
         "560814313045229570": {
             "total_messages": 8,
             "total_messages_length": 52
         },
         "103213645772623872": {
-            "total_messages": 29,
-            "total_messages_length": 665
+            "total_messages": 62,
+            "total_messages_length": 1407
         },
         "95563800354238464": {
-            "total_messages": 69,
-            "total_messages_length": 1493
+            "total_messages": 169,
+            "total_messages_length": 3046
         },
         "213497303959339009": {
             "total_messages": 1,
@@ -1023,24 +1023,24 @@
             "total_messages_length": 2
         },
         "734256754736758906": {
-            "total_messages": 37,
-            "total_messages_length": 848
+            "total_messages": 142,
+            "total_messages_length": 2728
         },
         "107840548391391232": {
-            "total_messages": 1,
-            "total_messages_length": 13
+            "total_messages": 10,
+            "total_messages_length": 132
         },
         "754989014347415633": {
-            "total_messages": 19,
-            "total_messages_length": 282
+            "total_messages": 20,
+            "total_messages_length": 293
         },
         "299274674569740288": {
-            "total_messages": 22,
-            "total_messages_length": 279
+            "total_messages": 72,
+            "total_messages_length": 1201
         },
         "561994884140236825": {
-            "total_messages": 97,
-            "total_messages_length": 1611
+            "total_messages": 347,
+            "total_messages_length": 5144
         },
         "333515052206522368": {
             "total_messages": 2,
@@ -1051,32 +1051,108 @@
             "total_messages_length": 32
         },
         "276829668332535810": {
-            "total_messages": 12,
-            "total_messages_length": 220
+            "total_messages": 37,
+            "total_messages_length": 596
         },
         "753140600731336784": {
-            "total_messages": 74,
-            "total_messages_length": 1185
+            "total_messages": 126,
+            "total_messages_length": 1917
         },
         "121339500482920448": {
-            "total_messages": 83,
-            "total_messages_length": 1179
+            "total_messages": 331,
+            "total_messages_length": 5031
         },
         "283437162106454018": {
-            "total_messages": 2,
-            "total_messages_length": 76
+            "total_messages": 11,
+            "total_messages_length": 168
         },
         "393033826474917889": {
             "total_messages": 3,
             "total_messages_length": 39
         },
         "764648863708741653": {
-            "total_messages": 2,
-            "total_messages_length": 9
+            "total_messages": 4,
+            "total_messages_length": 12
         },
         "730601680248242196": {
+            "total_messages": 33,
+            "total_messages_length": 368
+        },
+        "636224869654331411": {
+            "total_messages": 1,
+            "total_messages_length": 8
+        },
+        "134767915273551872": {
+            "total_messages": 201,
+            "total_messages_length": 3531
+        },
+        "180757409847967744": {
+            "total_messages": 4,
+            "total_messages_length": 100
+        },
+        "180045385052454912": {
+            "total_messages": 2,
+            "total_messages_length": 11
+        },
+        "107193865659756544": {
+            "total_messages": 3,
+            "total_messages_length": 51
+        },
+        "469627450431766548": {
+            "total_messages": 16,
+            "total_messages_length": 114
+        },
+        "194296780601425920": {
+            "total_messages": 12,
+            "total_messages_length": 376
+        },
+        "483228441949372449": {
+            "total_messages": 4,
+            "total_messages_length": 293
+        },
+        "853057535685689384": {
             "total_messages": 10,
-            "total_messages_length": 102
+            "total_messages_length": 292
+        },
+        "925086179559366776": {
+            "total_messages": 1,
+            "total_messages_length": 35
+        },
+        "318726272731709441": {
+            "total_messages": 5,
+            "total_messages_length": 135
+        },
+        "885901925957136425": {
+            "total_messages": 19,
+            "total_messages_length": 352
+        },
+        "180646902822338560": {
+            "total_messages": 4,
+            "total_messages_length": 61
+        },
+        "277141974207823883": {
+            "total_messages": 1,
+            "total_messages_length": 20
+        },
+        "923398100415049819": {
+            "total_messages": 3,
+            "total_messages_length": 19
+        },
+        "933970127572058129": {
+            "total_messages": 13,
+            "total_messages_length": 441
+        },
+        "107462840050282496": {
+            "total_messages": 15,
+            "total_messages_length": 375
+        },
+        "659135462132416546": {
+            "total_messages": 2,
+            "total_messages_length": 62
+        },
+        "152958111567577088": {
+            "total_messages": 5,
+            "total_messages_length": 34
         }
     }
 }

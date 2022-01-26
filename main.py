@@ -65,7 +65,9 @@ async def lb(ctx):
 
 	await ctx.send(embed=embed)
 
-
+@bot.command()
+async def welcome(ctx,member:discord.Member=None):
+	await ctx.send(f"Welcome to B40 {member.mention},  check out <#739846671587999795> to get going and <#749340577518059541> to get some gaming roles.☄️💫 ")
 
 @bot.command()
 async def ftest(ctx):
@@ -337,6 +339,8 @@ async def penis(ctx, *, user : discord.Member=None):
 		penis = "8==D"
 	elif user.id == 126077599465078785: #omri
 		penis = "8======================================D"
+	elif user.id == 730601680248242196: #stromox
+		await ctx.send("No Penis Found")
 	else:
 		penis = "8" + "="*random.randint(0, 18) + "D"
 
