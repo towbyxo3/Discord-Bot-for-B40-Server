@@ -67,7 +67,9 @@ async def lb(ctx):
 
 
 
-
+@bot.command()
+async def ftest(ctx):
+	await ctx.send("?mute <@380766944707608577> 10")
 
 
 @bot.command()
@@ -331,7 +333,12 @@ async def penis(ctx, *, user : discord.Member=None):
 	Returns penis stats of user: penis @user
 	"""
 
-	penis = "8" + "="*random.randint(0, 18) + "D"
+	if user.id == 283715405934231552: #ahzee
+		penis = "8==D"
+	elif user.id == 126077599465078785: #omri
+		penis = "8======================================D"
+	else:
+		penis = "8" + "="*random.randint(0, 18) + "D"
 
 	if len(penis)>15:
 		penis_info = "DAMN UR PACKING"
@@ -444,7 +451,7 @@ async def on_message(message):
 
 @bot.listen()
 async def on_message(message):	
-	bad_words = ["nigga","nigger","niggger","niger","ni55er","ni33er","nibber","nibba"]
+	bad_words = ["nigga","nigger","niggger","ni55er","ni33er","nibber","nibba"]
 	for word in bad_words:
 		if word in message.content.lower():
 
@@ -460,7 +467,7 @@ async def on_message(message):
 				chat_data[new_user] = 1
 				with open('databases/ncounter.json', 'w') as new_user_data:
 					json.dump(chat_data, new_user_data, indent=4)
-			time.sleep(1)
+			time.sleep(0.3)
 			await message.delete()
 
 
