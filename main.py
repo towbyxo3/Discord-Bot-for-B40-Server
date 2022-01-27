@@ -131,7 +131,27 @@ async def moveall(ctx: commands.Context):
 				await x.move_to(ctx.author.voice.channel) 
 
 
-
+@bot.command()
+async def membercount(ctx):
+	"Returns a member count history"
+	embed = discord.Embed(title='B40 Member History', timestamp=ctx.message.created_at, color=discord.Color.red())
+	with open('databases/server_stats.json', 'r') as file:
+		data = json.load(file)
+		for dates,stats in data.items():
+			try:
+				diff = stats['members']-server_members
+				if diff >0:
+					diff = "+"+ str(diff)
+				elif diff<0:
+					diff = "-"+ str(diff)
+				else:
+					pass
+			except:
+				diff = 0
+			server_dates = dates
+			server_members = stats['members']
+			embed.add_field(name=server_dates , value =f"{server_members} ({diff})",inline=False)
+	await ctx.send(embed=embed)
 
 
 @bot.command()
