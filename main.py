@@ -66,9 +66,40 @@ async def lb(ctx):
 
 	await ctx.send(embed=embed)
 
-@bot.command()
-async def welcome(ctx,member:discord.Member=None):
-	await ctx.send(f"Welcome to B40 {member.mention},  check out <#739846671587999795> to get going and <#749340577518059541> to get some gaming roles.☄️💫 ")
+
+@bot.listen()
+async def on_member_join(member):
+	today_date = str(datetime.date.today())
+	with open('databases/member_join.json','r') as file:
+		data = json.load(file)
+		new_user = str(member.id)
+		if today_date in data:
+			pass
+		else:
+			data[today_date]=[]
+		#update existing user at date
+		if new_user not in data[today_date]:
+			data[today_date].append(new_user)
+			with open('databases/member_join.json', 'w') as update_user_data:
+				json.dump(data, update_user_data, indent=4)
+	channel = channel = bot.get_channel(739175633673781262)
+	await channel.send(f"Welcome to B40 {member.mention},  check out <#739846671587999795> to get going and <#749340577518059541> to get some gaming roles.☄️💫 ")
+
+@bot.listen()
+async def on_member_remove(member):
+	today_date = str(datetime.date.today())
+	with open('databases/member_remove.json','r') as file:
+		data = json.load(file)
+		new_user = str(member.id)
+		if today_date in data:
+			pass
+		else:
+			data[today_date]=[]
+		#update existing user at date
+		if new_user not in data[today_date]:
+			data[today_date].append(new_user)
+			with open('databases/member_remove.json', 'w') as update_user_data:
+				json.dump(data, update_user_data, indent=4)
 
 @bot.command()
 async def ftest(ctx):
