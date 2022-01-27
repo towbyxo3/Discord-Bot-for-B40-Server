@@ -163,10 +163,11 @@ async def moveall(ctx: commands.Context):
 				await x.move_to(ctx.author.voice.channel) 
 
 
+
 @bot.command()
 async def membercount(ctx):
-	"Returns a member count history"
-	embed = discord.Embed(title='B40 Member History', timestamp=ctx.message.created_at, color=discord.Color.red())
+	embed = discord.Embed(title='B40 Member History', timestamp=ctx.message.created_at, description = "Members at the beginning of the day [difference to yesterday]\n Members who joined throughout the day",color=discord.Color.red())
+	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
 	with open('databases/server_stats.json', 'r') as file:
 		data = json.load(file)
 		for dates,stats in data.items():
@@ -182,11 +183,25 @@ async def membercount(ctx):
 				diff = 0
 			server_dates = dates
 			server_members = stats['members']
-			d = datetime.datetime.strptime(dates, '%Y-%m-%d')
+			try:
+				with open('databases/member_join.json','r') as file:
+					data = json.load(file)
+					member_join = len(data[server_dates])
+					print(member_join)
+			except:
+				member_join=""
+			try:
+				with open('databases/member_remove.json','r') as file2:
+					data = json.load(file2)
+					member_remove = len(data[server_dates])
+			except Exception as e:
+				member_remove=""
+				print(e)
+			
+			d = datetime.datetime.strptime(server_dates, '%Y-%m-%d')
 			formatted_date = datetime.date.strftime(d, "%d %b %Y")
-			embed.add_field(name=formatted_date , value =f"{server_members} ({diff})",inline=False)
+			embed.add_field(name=formatted_date , value =f"{server_members} ({diff})\nNew:   {member_join}",inline=False)
 	await ctx.send(embed=embed)
-
 
 @bot.command()
 async def serverinfo(ctx):
