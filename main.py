@@ -162,7 +162,35 @@ async def moveall(ctx: commands.Context):
 				print(x.name)
 				await x.move_to(ctx.author.voice.channel) 
 
+@bot.command()
+async def newmembers(ctx):
+	await ctx.send("Loading..")
+	embed = discord.Embed(title='B40 New Members info', timestamp=ctx.message.created_at, description = "New members",color=discord.Color.red())
+	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
 
+	day = []
+	with open('databases/member_join.json','r') as file:
+		data = json.load(file)
+		for dates,members in data.items():
+			count = 0
+			d = datetime.datetime.strptime(dates, '%Y-%m-%d')
+			formatted_date = datetime.date.strftime(d, "%d %b %Y")
+			member_list = []
+			for member in members:
+				try:
+					username = await ctx.author.guild.fetch_member(int(member))
+					username = username.name
+				except:
+					username = ""
+					count+=1
+				if username != "":
+					member_list.append(username)
+			still_here = len(member_list)
+			member_list = ", ".join(member_list)
+			embed.add_field(name=formatted_date, value = f"{member_list}\n*Stayed: {still_here} | Left:* {count}   ",inline = False)
+			print("test")
+	await ctx.send(embed=embed)
+			
 
 @bot.command()
 async def membercount(ctx):
@@ -200,7 +228,7 @@ async def membercount(ctx):
 			
 			d = datetime.datetime.strptime(server_dates, '%Y-%m-%d')
 			formatted_date = datetime.date.strftime(d, "%d %b %Y")
-			embed.add_field(name=formatted_date , value =f"{server_members} ({diff})\nNew:   {member_join}",inline=False)
+			embed.add_field(name=formatted_date , value =f"{server_members} ({diff})\nnew:   {member_join}",inline=False)
 	await ctx.send(embed=embed)
 
 @bot.command()
