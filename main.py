@@ -150,7 +150,9 @@ async def membercount(ctx):
 				diff = 0
 			server_dates = dates
 			server_members = stats['members']
-			embed.add_field(name=server_dates , value =f"{server_members} ({diff})",inline=False)
+			d = datetime.datetime.strptime(dates, '%Y-%m-%d')
+			formatted_date = datetime.date.strftime(d, "%d %b %Y")
+			embed.add_field(name=formatted_date , value =f"{server_members} ({diff})",inline=False)
 	await ctx.send(embed=embed)
 
 
@@ -361,6 +363,9 @@ async def penis(ctx, *, user : discord.Member=None):
 		penis = "8======================================D"
 	elif user.id == 730601680248242196: #stromox
 		await ctx.send("No Penis Found")
+	elif user.id == 121339500482920448: #stromox
+		penis = "8=D"
+
 	else:
 		penis = "8" + "="*random.randint(0, 18) + "D"
 
