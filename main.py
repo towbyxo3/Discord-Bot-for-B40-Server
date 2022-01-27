@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import check
 import datetime
 import time
 import os
@@ -363,9 +364,17 @@ async def penis(ctx, *, user : discord.Member=None):
 		penis = "8======================================D"
 	elif user.id == 730601680248242196: #stromox
 		await ctx.send("No Penis Found")
-	elif user.id == 121339500482920448: #stromox
-		penis = "8=D"
+	elif user.id == 121339500482920448: 
+		embed = discord.Embed(title='B40 PENIS MEASUREMENT', description="It's... It's unreal 😱", timestamp=ctx.message.created_at, color=discord.Color.red())
+		embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
 
+		embed.add_field(name="DICK OF:", value=user.mention)
+		embed.add_field(name="LENGTH:", value="∞")
+		embed.add_field(name="UNIT:", value="error")
+		embed.add_field(name="PENIS DISPLAY:", value="unable to process the sheer amount of data retrieved")
+		embed.set_footer(text=f"Used by {ctx.author}", icon_url=ctx.author.avatar_url)
+		await ctx.send(embed=embed)
+	
 	else:
 		penis = "8" + "="*random.randint(0, 18) + "D"
 
@@ -721,8 +730,36 @@ async def userchatdate(ctx,chat_date,member: discord.Member = None):
 	except:
 		await ctx.send("No messages found")
 
+def in_voice_channel():  
+    def predicate(ctx):
+        return ctx.author.voice and ctx.author.voice.channel
+    return check(predicate)
 
+@in_voice_channel()
+@bot.command()
+async def mm(ctx, *, channel : discord.VoiceChannel):
+	"""
+	Moves every person in the current voice channel to a new channel: mm [channel name]
+	"""
 
+	if ctx.author.guild_permissions.move_members:
+		for members in ctx.author.voice.channel.members:
+			await members.move_to(channel)
+	else: 
+		await ctx.send("You don't have the permission to use this command!")      
+
+@bot.command()
+async def mmall(ctx, *, channel : discord.VoiceChannel):
+	"""
+	Moves every member of the server who is in a voice channel to a certain voice channel.: mmall [channel name] 
+	"""
+
+	if ctx.author.guild_permissions.move_members:
+		for channelz in ctx.guild.voice_channels:
+			for members in channelz.members:
+				await members.move_to(channel)
+	else: 
+		await ctx.send("You don't have the permission to use this command!")
 
 my_secret = os.environ['TOKEN']
 keep_alive()

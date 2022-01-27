@@ -42,10 +42,10 @@
         "files": 32
     },
     "2022-01-27": {
-        "total_server_messages": 1042,
-        "total_server_messages_length": 17275,
-        "links": 13,
+        "total_server_messages": 3673,
+        "total_server_messages_length": 69851,
+        "links": 35,
         "members": 611,
-        "files": 6
+        "files": 32
     }
 }
