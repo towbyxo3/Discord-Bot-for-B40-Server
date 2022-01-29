@@ -83,6 +83,7 @@ async def on_member_join(member):
 			with open('databases/member_join.json', 'w') as update_user_data:
 				json.dump(data, update_user_data, indent=4)
 	channel = channel = bot.get_channel(739175633673781262)
+	time.sleep(2)
 	await channel.send(f"Welcome to B40 {member.mention},  check out <#739846671587999795> to get going and <#749340577518059541> to get some gaming roles.☄️💫 ")
 
 @bot.listen()
@@ -150,6 +151,50 @@ async def userinfo(ctx,member:discord.Member=None):
 
 	await ctx.send(embed=embed)
 
+@bot.command()
+async def oldestmember(ctx, num=3):
+	"""
+	Returns the oldest members of the server.: oldestmember [number of users]
+	"""
+
+	member_list= {}
+	for guild in bot.guilds:
+		for member in guild.members:
+			if not member.bot:
+				member_name = str(member.name) +"#"+str(member.discriminator)
+				member_register = str(member.joined_at)[:16]
+				member_list[member_name]=member_register
+	sorted_list = sorted(member_list.items(), key=lambda x: x[1])
+	embed = discord.Embed(title='B40 Oldest Discord Users', timestamp=ctx.message.created_at, description = "Leaderboard of the discord users with oldest registration date",color=discord.Color.red())
+	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
+	for data in sorted_list[:num]:
+		embed.add_field(name=data[0], value = data[1], inline=False)
+	await ctx.send(embed=embed)
+
+
+
+
+@bot.command()
+async def oldestuser(ctx, num=3):
+	"""
+	Returns the oldest discord users of the server.: oldestuser [number of users]
+	"""
+
+	member_list= {}
+	for guild in bot.guilds:
+		for member in guild.members:
+			if not member.bot:
+				member_name = str(member.name) +"#"+str(member.discriminator)
+				member_register = str(member.created_at)[:16]
+				member_list[member_name]=member_register
+	sorted_list = sorted(member_list.items(), key=lambda x: x[1])
+	embed = discord.Embed(title='B40 Oldest Discord Users', timestamp=ctx.message.created_at, description = "Leaderboard of the discord users with oldest registration date",color=discord.Color.red())
+	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
+	for data in sorted_list[:num]:
+		embed.add_field(name=data[0], value = data[1], inline=False)
+	await ctx.send(embed=embed)
+
+
 
 @bot.command()
 async def moveall(ctx: commands.Context):
@@ -164,6 +209,9 @@ async def moveall(ctx: commands.Context):
 
 @bot.command()
 async def newmembers(ctx):
+	"""
+	Returns information about recently joined members: newmembers
+	"""
 	await ctx.send("Loading..")
 	embed = discord.Embed(title='B40 New Members info', timestamp=ctx.message.created_at, description = "New members",color=discord.Color.red())
 	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
@@ -187,14 +235,17 @@ async def newmembers(ctx):
 					member_list.append(username)
 			still_here = len(member_list)
 			member_list = ", ".join(member_list)
-			embed.add_field(name=formatted_date, value = f"{member_list}\n*Stayed: {still_here} | Left:* {count}   ",inline = False)
+			embed.add_field(name=formatted_date, value = f"*Stayed: {still_here} | Left:* {count}  \n \n{member_list} ",inline = False)
 			print("test")
 	await ctx.send(embed=embed)
 			
 
 @bot.command()
 async def membercount(ctx):
-	embed = discord.Embed(title='B40 Member History', timestamp=ctx.message.created_at, description = "Members at the beginning of the day [difference to yesterday]\n Members who joined throughout the day",color=discord.Color.red())
+	"""
+	Returns stats about membercount history.: membercount
+	"""
+	embed = discord.Embed(title='B40 Member History', timestamp=ctx.message.created_at, description = "Members at the beginning of the day [difference to yesterday]",color=discord.Color.red())
 	embed.set_thumbnail(url="https://i.imgur.com/7dyGz0S.jpg")
 	with open('databases/server_stats.json', 'r') as file:
 		data = json.load(file)
@@ -211,7 +262,7 @@ async def membercount(ctx):
 				diff = 0
 			server_dates = dates
 			server_members = stats['members']
-			try:
+			"""try:
 				with open('databases/member_join.json','r') as file:
 					data = json.load(file)
 					member_join = len(data[server_dates])
@@ -224,11 +275,12 @@ async def membercount(ctx):
 					member_remove = len(data[server_dates])
 			except Exception as e:
 				member_remove=""
-				print(e)
+				print(e)"""
 			
 			d = datetime.datetime.strptime(server_dates, '%Y-%m-%d')
 			formatted_date = datetime.date.strftime(d, "%d %b %Y")
-			embed.add_field(name=formatted_date , value =f"{server_members} ({diff})\nnew:   {member_join}",inline=False)
+			embed.add_field(name=formatted_date , value =f"{server_members} ({diff})",inline=False)			
+			#embed.add_field(name=formatted_date , value =f"{server_members} ({diff})\nnew:   {member_join}",inline=False)
 	await ctx.send(embed=embed)
 
 @bot.command()
