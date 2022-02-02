@@ -56,10 +56,38 @@
         "files": 125
     },
     "2022-01-29": {
-        "total_server_messages": 1712,
-        "total_server_messages_length": 27756,
-        "links": 19,
+        "total_server_messages": 3097,
+        "total_server_messages_length": 44752,
+        "links": 37,
         "members": 628,
-        "files": 20
+        "files": 42
+    },
+    "2022-01-30": {
+        "total_server_messages": 3861,
+        "total_server_messages_length": 59267,
+        "links": 73,
+        "members": 634,
+        "files": 105
+    },
+    "2022-01-31": {
+        "total_server_messages": 3642,
+        "total_server_messages_length": 62745,
+        "links": 37,
+        "members": 639,
+        "files": 49
+    },
+    "2022-02-01": {
+        "total_server_messages": 2858,
+        "total_server_messages_length": 48211,
+        "links": 36,
+        "members": 647,
+        "files": 29
+    },
+    "2022-02-02": {
+        "total_server_messages": 2961,
+        "total_server_messages_length": 49298,
+        "links": 35,
+        "members": 650,
+        "files": 29
     }
 }
